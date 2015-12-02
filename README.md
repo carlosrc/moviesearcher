@@ -1,1 +1,2 @@
-# moviesearcher
+# moviesearcher 
+Buscador de películas
