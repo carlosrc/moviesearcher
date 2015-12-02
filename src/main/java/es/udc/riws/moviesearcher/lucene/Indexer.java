@@ -25,6 +25,11 @@ public class Indexer {
 		Analyzer analyzer = new SpanishAnalyzer(Version.LUCENE_48);
 
 		File folder = new File(ConstantesLucene.directory);
+		// FIXME: Borrar directorio antes de indexar
+		if (folder.exists()) {
+			boolean exito = folder.delete();
+			
+		}
 		Directory directory;
 				
 		try {
@@ -46,6 +51,7 @@ public class Indexer {
 	// Método para indexar una película
 	private static Document addMovie(Movie movie) {
 		Document doc = new Document();
+		// TODO: Añadir campos 
 		doc.add(new TextField(ConstantesLucene.title, movie.getTitle(), Field.Store.YES));
 		doc.add(new TextField(ConstantesLucene.description, movie.getDescription(), Field.Store.YES));
 		return doc;
