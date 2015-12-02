@@ -1,4 +1,4 @@
-package es.udc.riws.moviesearcher.api.imdb;
+package es.udc.riws.moviesearcher.api.apis;
 
 import java.io.IOException;
 import java.util.List;

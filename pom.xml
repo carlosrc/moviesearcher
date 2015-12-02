@@ -34,6 +34,13 @@
 			<version>4.8.1</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-analyzers-common</artifactId>
+			<version>4.8.1</version>
+		</dependency>
+
+
 		<!-- APIs -->
 
 		<!-- themoviedb.org -->

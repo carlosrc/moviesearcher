@@ -1,4 +1,4 @@
-package es.udc.riws.moviesearcher.api;
+package es.udc.riws.moviesearcher.api.apis;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,6 @@ public class TmdbApiServiceImpl {
 	public List<Movie> getMovies() {
 
 		TmdbMovies moviesTmdb = new TmdbApi(API_KEY).getMovies();
-		// MovieDb moviedb = movies.getMovie(5353, "es");
 
 		List<Movie> movies = new ArrayList<Movie>();
 		MovieResultsPage results = moviesTmdb.getPopularMovieList("es", 1);
