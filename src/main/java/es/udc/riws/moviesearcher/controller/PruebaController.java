@@ -1,4 +1,4 @@
-package es.udc.riws.hello;
+package es.udc.riws.moviesearcher.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,21 +13,21 @@ public class PruebaController {
 	@Autowired
 	private ApiService apiService;
 
-	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String homePage() {
-		return "redirect:search";
-	}
-	
-	@RequestMapping(value = "/generateIndex", method = RequestMethod.GET)
-	public String generateIndex() {
-
-		apiService.getMovies();
-
-		return null;
-	}
-
-	
-	@RequestMapping(value = "/search", method = RequestMethod.GET)
+//	@RequestMapping(value = "/", method = RequestMethod.GET)
+//	public String homePage() {
+//		return "redirect:search";
+//	}
+//	
+//	@RequestMapping(value = "/generateIndex", method = RequestMethod.GET)
+//	public String generateIndex() {
+//
+//		apiService.getMovies();
+//
+//		return null;
+//	}
+//
+//	
+	@RequestMapping(value = "/buscar", method = RequestMethod.GET)
 	public String search() {
 
 		apiService.getMovies();

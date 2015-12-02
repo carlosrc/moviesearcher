@@ -14,10 +14,13 @@ public class ApiServiceImpl implements ApiService {
 	@Autowired
 	private ImdbApiServiceImpl imdbApiService;
 	
+	@Autowired
+	private TmdbApiServiceImpl tmdbApiService;
+	
 	@Override
 	public List<Movie> getMovies() {
 		
-		return imdbApiService.getMovies();
+		return tmdbApiService.getMovies();
 	}
 
 }

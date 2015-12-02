@@ -26,11 +26,24 @@
 			<version>2.13.1</version>
 		</dependency>
 
+		<!-- Luscene -->
+
 		<dependency>
 			<groupId>org.apache.lucene</groupId>
 			<artifactId>lucene-core</artifactId>
 			<version>4.8.1</version>
 		</dependency>
+
+		<!-- APIs -->
+
+		<!-- themoviedb.org -->
+		<dependency>
+			<groupId>info.movito</groupId>
+			<artifactId>themoviedbapi</artifactId>
+			<version>1.1</version>
+		</dependency>
+
+		<!-- Fin APIs -->
 
 		<dependency>
 			<groupId>org.json</groupId>

@@ -12,7 +12,7 @@
 
 	<context:annotation-config />
 
-	<context:component-scan base-package="es.udc.riws">
+	<context:component-scan base-package="es.udc.riws.moviesearcher">
 		<context:exclude-filter type="annotation"
 			expression="org.springframework.stereotype.Controller" />
 	</context:component-scan>
