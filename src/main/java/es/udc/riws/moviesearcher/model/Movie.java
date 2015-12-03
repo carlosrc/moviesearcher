@@ -2,12 +2,12 @@ package es.udc.riws.moviesearcher.model;
 
 public class Movie {
 
-	// TODO: Añadir campos: persona (director, actores o escritores), géneros, duración, año de estreno
+	// TODO: Añadir campos: persona (director, actores o escritores), géneros, duración, año de estreno, nota
 	
 	private String title;
 
 	private String description;
-
+	
 	public Movie(String title, String description) {
 		super();
 		this.title = title;
