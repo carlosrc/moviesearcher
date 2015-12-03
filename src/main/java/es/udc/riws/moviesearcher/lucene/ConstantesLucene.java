@@ -11,6 +11,7 @@ public class ConstantesLucene {
 	public static String year 				= "year";
 	
 	
+	// Directorio donde se almacenan los índices
 	public static String directory			= "lucene/";
 	
 }

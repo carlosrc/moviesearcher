@@ -28,7 +28,6 @@ public class SearchRestController {
         Indexer.indexar(movies);
         
         return movies;
-        
     }
     
     @RequestMapping("/search")
@@ -38,7 +37,6 @@ public class SearchRestController {
         List<Movie> movies = Searcher.buscar(query);
         
         return movies;
-        
     }
     
     @RequestMapping("/generateIndex")
