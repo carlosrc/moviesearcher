@@ -8,6 +8,7 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.es.SpanishAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.FloatField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
@@ -25,11 +26,6 @@ public class Indexer {
 		Analyzer analyzer = new SpanishAnalyzer(Version.LUCENE_48);
 
 		File folder = new File(ConstantesLucene.directory);
-		// FIXME: Borrar directorio antes de indexar
-		if (folder.exists()) {
-			boolean exito = folder.delete();
-			
-		}
 		Directory directory;
 				
 		try {
@@ -51,9 +47,12 @@ public class Indexer {
 	// Método para indexar una película
 	private static Document addMovie(Movie movie) {
 		Document doc = new Document();
-		// TODO: Añadir campos 
 		doc.add(new TextField(ConstantesLucene.title, movie.getTitle(), Field.Store.YES));
 		doc.add(new TextField(ConstantesLucene.description, movie.getDescription(), Field.Store.YES));
+		doc.add(new FloatField(ConstantesLucene.voteAverage, movie.getVoteAverage(), Field.Store.YES));
+		for (String genre : movie.getGenres()) {
+			doc.add(new TextField(ConstantesLucene.genres, genre, Field.Store.YES));
+		}
 		return doc;
 	}
 

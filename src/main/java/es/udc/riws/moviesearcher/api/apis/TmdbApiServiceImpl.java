@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import es.udc.riws.moviesearcher.model.Movie;
 import info.movito.themoviedbapi.TmdbApi;
 import info.movito.themoviedbapi.TmdbMovies;
+import info.movito.themoviedbapi.model.Genre;
 import info.movito.themoviedbapi.model.MovieDb;
 import info.movito.themoviedbapi.model.core.MovieResultsPage;
 
@@ -20,10 +21,26 @@ public class TmdbApiServiceImpl {
 
 		TmdbMovies moviesTmdb = new TmdbApi(API_KEY).getMovies();
 
+		// Creamos una lista de películas
 		List<Movie> movies = new ArrayList<Movie>();
+		// Recuperamos las películas en español
 		MovieResultsPage results = moviesTmdb.getPopularMovieList("es", 1);
 		for (MovieDb result : results) {
-			movies.add(new Movie(result.getTitle(), result.getOverview()));
+			// Creamos una lista de géneros
+			List<String> genres = new ArrayList<String>();
+			if (result.getGenres() != null){
+				for (Genre genre : result.getGenres()) {
+					genres.add(genre.getName());
+				}
+			}
+			// Añadimos las películas recuperadas a la lista de películas
+			movies.add(new Movie(result.getTitle(), result.getOverview(),
+					result.getVoteAverage(), genres));
+			
+			// Comprobamos se estamos capturando géneros de películas 
+			// FIXME: No está devolviendo géneros la api de TMDb
+			if (result.getGenres() != null && result.getGenres().size() > 0)
+				System.out.print(result.getGenres().get(0).getName());
 		}
 
 		return movies;

@@ -3,6 +3,7 @@ package es.udc.riws.moviesearcher.lucene;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.lucene.analysis.Analyzer;
@@ -34,16 +35,31 @@ public class Searcher {
 			IndexSearcher isearcher = new IndexSearcher(ireader);
 
 			// TODO: Añadir el resto de campos a la búsqueda
-			QueryParser parser = new QueryParser(Version.LUCENE_48, ConstantesLucene.title, analyzer);
+			QueryParser parser = new QueryParser(Version.LUCENE_48,
+					ConstantesLucene.title, analyzer);
 			Query query = parser.parse(q);
-			
+
 			ScoreDoc[] hits = isearcher.search(query, null, 1000).scoreDocs;
 
 			// Iterar sobre los resultados
 			for (int i = 0; i < hits.length; i++) {
 				System.out.println("Movie_" + i);
 				Document hitDoc = isearcher.doc(hits[i].doc);
-				Movie movie = new Movie(hitDoc.get(ConstantesLucene.title), hitDoc.get(ConstantesLucene.description));
+				
+				// Pasamos el string voteAverage a Float
+				String voteAverageString = hitDoc
+						.get(ConstantesLucene.voteAverage);
+				Float voteAverageFloat = null;
+				if (voteAverageString != null)
+					voteAverageFloat = Float.parseFloat(voteAverageString);
+				
+				// Creamos el objeto película
+				Movie movie = new Movie(hitDoc.get(ConstantesLucene.title),
+						hitDoc.get(ConstantesLucene.description),
+						voteAverageFloat, 
+						Arrays.asList(hitDoc.getValues(ConstantesLucene.genres))); // Pasamos de un String[] a List<String>
+				
+				// Añadimos la película buscada a la lista de películas
 				movies.add(movie);
 			}
 			ireader.close();
