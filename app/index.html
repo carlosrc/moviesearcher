@@ -12,8 +12,13 @@
 	<script src="js/lib/angular-material.min.js"></script>
 	<script src="js/lib/angular-resource.js"></script>
 
+
 	<script src="js/app.js"></script>
-	<!-- <script src="js/services.js"></script> -->
+	<script src="js/services.js"></script> 
+
+<script src="js/lib/dd-text-collapse.js"></script>
+
+	<title>Buscador de películas</title>
 
 </head>
 <body>
@@ -29,31 +34,57 @@
 	    </div>
 	  </md-toolbar>
 
-	<div id="form"  class="md-inline-form" ng-controller="MainController as main">
-		<md-content layout-padding layout="row" layout-sm="column">
-			<md-input-container>
-				<input ng-model="titulo" aria-label="titulo">
-			</md-input-container>
-		</md-content>
+	<div class="md-inline-form" ng-controller="MainController as main">
 
-		<md-button class="md-raised md-primary" ng-click="search()">Buscar</md-button>
+		<div id="bloqueControl">
+			<form id="searchForm">
+				<md-content layout-padding layout="row" layout-sm="column">
+					<md-input-container>
+						<input ng-model="query" aria-label="busqueda" placeholder="Búsqueda general">
+					</md-input-container>
+					<md-input-container>
+						<input ng-model="title" aria-label="título" placeholder="Título">
+					</md-input-container>
+					<md-input-container>
+						<input ng-model="description" aria-label="descripción" placeholder="Descripción">
+					</md-input-container>
+					<md-input-container>
+						<input ng-model="description" aria-label="descripción" placeholder="Descripción">
+					</md-input-container>
 
-		<md-button class="md-raised " ng-click="index()">Generar índice</md-button>
+				</md-content>
+
+
+				<md-button class="md-raised md-primary" ng-click="search()" >Buscar</md-button>
+			</form>
+
+			<md-button class="md-raised " ng-click="index()">Generar índice</md-button>
+		</div>
 
 		<md-content class="md-padding" layout="row" layout-wrap layout-align="center start">
 			<div ng-show="movies.length">
-				<h2>Películas encontradas</h2>
+				<h1 class="md-headline">Películas encontradas</h1>
 
 				<div ng-repeat="movie in movies">
 					<md-card>
 				        <md-card-title>
-				          <md-card-title-text>
-				            <span class="md-headline">{{movie.title}}</span>
-				            <span class="md-subhead">{{movie.description}}</span>
-				          </md-card-title-text>
-				          <md-card-title-media ng-show="movie.urlPoster">
+				        <md-card-title-media ng-show="movie.urlPoster">
 				            <div class="md-media-md card-media"><img src="https://image.tmdb.org/t/p/w185/{{movie.urlPoster}}" /></div>
 				          </md-card-title-media>
+				          <md-card-title-text>
+				            <span class="md-headline">{{movie.title}} 
+				            <md-button class="md-fab md-mini md-primary" aria-label="vote average">{{movie.voteAverage}}</md-button>
+				            <span class="md-subhead" ng-show="movie.runtime > 0">{{movie.runtime}} min.</span>
+				            </span>
+
+				            <span dd-text-collapse dd-text-collapse-max-length="250" dd-text-collapse-text="{{movie.description}}" class="md-body-1"></span>
+
+							<md-chips
+						        ng-model="movie.genres"
+						        readonly="true"></md-chips>
+
+				          </md-card-title-text>
+				          
 				        </md-card-title>
 				        <md-card-actions layout="row" layout-align="end center">
 				          <!-- <md-button>Action 1</md-button>
@@ -61,10 +92,18 @@
 				        </md-card-actions>
 				      </md-card>
 			      </div>
+
+				<md-button class="float-right md-fab md-primary" aria-label="top" ng-href="#">
+				  top
+				</md-button>
+
 	    	</div>
 		</md-content>
 
+		
+
 	</div>
+
 </section>
 
 </body>

@@ -12,7 +12,14 @@ public class ConstantesLucene {
 	public static String duration			= "duration";
 	public static String year 				= "year";
 	public static String voteAverage		= "voteAverage";
+	public static String releaseDate		= "releaseDate";
+	public static String runtime			= "runtime";
 	public static String genres				= "genres";
+	
+	public static String cast				= "cast";
+	public static String director			= "director";
+	
+	public static String score				= "score";
 	
 	// Directorio donde se almacenan los índices
 	public static String directory			= "lucene/";

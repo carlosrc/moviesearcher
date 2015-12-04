@@ -1,5 +1,6 @@
 package es.udc.riws.moviesearcher.rest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,6 @@ import es.udc.riws.moviesearcher.model.Movie;
 
 @RestController
 public class SearchRestController {
-
-//    private final AtomicLong counter = new AtomicLong();
 
     @Autowired
     private ApiService apiService;
@@ -34,8 +33,13 @@ public class SearchRestController {
     public List<Movie> search(@RequestParam(value="q", defaultValue="") String query) {
         System.out.println("buscar:" + query);
         
-        List<Movie> movies = Searcher.buscar(query);
-        
+        List<Movie> movies = new ArrayList<Movie>();
+        if (query != null && !query.equals("")) {
+        	movies = Searcher.buscar(query);
+        } else {
+        	// Si no hay ninguna consulta se devuelven todas las películas
+        	movies = apiService.getMovies();
+        }
         return movies;
     }
     

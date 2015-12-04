@@ -9,6 +9,8 @@ import org.apache.lucene.analysis.es.SpanishAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.FloatField;
+import org.apache.lucene.document.IntField;
+import org.apache.lucene.document.StoredField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
@@ -18,6 +20,7 @@ import org.apache.lucene.util.Version;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 
 import es.udc.riws.moviesearcher.model.Movie;
+import es.udc.riws.moviesearcher.model.Person;
 
 public class Indexer {
 
@@ -62,19 +65,34 @@ public class Indexer {
 			return doc;
 		}
 		doc.add(new TextField(ConstantesLucene.title, movie.getTitle(), Field.Store.YES));
+		
 		if (movie.getDescription() != null) {
 			doc.add(new TextField(ConstantesLucene.description, movie.getDescription(), Field.Store.YES));
 		}
 		if (movie.getUrlPoster() != null) {
-			// FIXME: No indexar, sólo almacenar
-			doc.add(new TextField(ConstantesLucene.poster, movie.getUrlPoster(), Field.Store.YES));
+			// El póster no se indexa, sólo se almacena
+			doc.add(new StoredField(ConstantesLucene.poster, movie.getUrlPoster()));
 		}
 		if (movie.getVoteAverage() != null) {
 			doc.add(new FloatField(ConstantesLucene.voteAverage, movie.getVoteAverage(), Field.Store.YES));
 		}
+		
+		if (movie.getReleaseDate() != null) {
+			doc.add(new TextField(ConstantesLucene.releaseDate, movie.getReleaseDate(), Field.Store.YES));
+		}
+		
+		doc.add(new IntField(ConstantesLucene.runtime, movie.getRuntime(), Field.Store.YES));
+		
+		for (Person person : movie.getPeople()) {
+			String personToIndex = person.getName() + " | " + person.getCharacterName() + " | " + person.getOrder();
+			doc.add(new TextField(ConstantesLucene.cast, personToIndex, Field.Store.YES));
+		}
+		
 		for (String genre : movie.getGenres()) {
 			doc.add(new TextField(ConstantesLucene.genres, genre, Field.Store.YES));
 		}
+		
+		
 		return doc;
 	}
 

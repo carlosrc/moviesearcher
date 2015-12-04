@@ -1,28 +1,37 @@
 'use strict';
 
-app.service('Servicios', ['ngResource'])
-  .factory('AngularIssues', function($resource){
+app.service('Servicios', ['$resource', function($resource) {
 
-    this.prueba = function () {
-      console.log("Hola service!");
-      return $resource('http://localhost:8080/moviesearcher/search?q=:q',
-        {q: '@q'},
-        {getIssue: {method: 'GET', params: {q: "spectre"}}});
+  // $httpProvider.defaults.useXDomain = true;
+  // delete $httpProvider.defaults.headers.common['X-Requested-With'];
+
+  this.index = function (movies) {
+      console.log("Index method");
+    var MovieService = $resource('http://www.localhost:8080/moviesearcher/indexar', 
+      {}, {query: {method: 'GET',  isArray: true}});
+    
+    // TODO: Mostrar toast cuando obtenga true o false. Bloquear pantalla?
+    MovieService.query({}, function(movie) {
+        angular.forEach(movie, function (item) {
+            if (item.title) {
+                movies.push(item);
+            }         
+        });
+    });
+  };
+
+    this.search = function (query, movies) {
+      console.log("Search method:" + query);
+    var MovieService = $resource('http://www.localhost:8080/moviesearcher/search', 
+      {}, {query: {method: 'GET',  isArray: true, params: {q: query}}});
+
+    MovieService.query({q:query}, function(movie) {
+        angular.forEach(movie, function (item) {
+            if (item.title) {
+                movies.push(item);
+            }         
+        });
+    });
+
     };
-})
-.value('version', '0.1');
-
-// services.config(['$resourceProvider', function($resourceProvider) {
-//   // Don't strip trailing slashes from calculated URLs
-//   $resourceProvider.defaults.stripTrailingSlashes = false;
-// }]);
-
-
-
-/*
-{ 'get':    {method:'GET'},
-  'save':   {method:'POST'},
-  'query':  {method:'GET', isArray:true},
-  'remove': {method:'DELETE'},
-  'delete': {method:'DELETE'} };
-*/
+}]);
