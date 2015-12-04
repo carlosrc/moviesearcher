@@ -8,10 +8,10 @@ public class Person {
 
 	private String name;
 	private String characterName;
-	private int order;
+	private Integer order;
 	private TypePerson type;
 
-	public Person(String name, String characterName, int order, TypePerson type) {
+	public Person(String name, String characterName, Integer order, TypePerson type) {
 		super();
 		this.name = name;
 		this.characterName = characterName;
@@ -35,11 +35,11 @@ public class Person {
 		this.characterName = characterName;
 	}
 
-	public int getOrder() {
+	public Integer getOrder() {
 		return order;
 	}
 
-	public void setOrder(int order) {
+	public void setOrder(Integer order) {
 		this.order = order;
 	}
 

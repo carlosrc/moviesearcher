@@ -42,23 +42,26 @@
 					<md-input-container>
 						<input ng-model="query" aria-label="busqueda" placeholder="Búsqueda general">
 					</md-input-container>
-					<md-input-container>
+					<!-- <md-input-container>
 						<input ng-model="title" aria-label="título" placeholder="Título">
 					</md-input-container>
 					<md-input-container>
 						<input ng-model="description" aria-label="descripción" placeholder="Descripción">
 					</md-input-container>
 					<md-input-container>
-						<input ng-model="description" aria-label="descripción" placeholder="Descripción">
+						<input ng-model="genres" aria-label="géneros" placeholder="Géneros">
 					</md-input-container>
-
+ -->
 				</md-content>
 
 
 				<md-button class="md-raised md-primary" ng-click="search()" >Buscar</md-button>
 			</form>
 
+
+			<md-button class="md-raised " ng-click="searchAll()">Mostrar todas</md-button>
 			<md-button class="md-raised " ng-click="index()">Generar índice</md-button>
+
 		</div>
 
 		<md-content class="md-padding" layout="row" layout-wrap layout-align="center start">
@@ -79,9 +82,34 @@
 
 				            <span dd-text-collapse dd-text-collapse-max-length="250" dd-text-collapse-text="{{movie.description}}" class="md-body-1"></span>
 
+				            <span class="md-subhead">Géneros</span>
 							<md-chips
 						        ng-model="movie.genres"
 						        readonly="true"></md-chips>
+
+
+						    <span class="md-subhead">Director</span>
+						    <div class="md-chips">
+							    <div ng-repeat="director in movie.people | filter:{ type: 'DIRECTOR' }" >
+								    <span class="md-chip md-readonly">
+									    <span class="md-chip-content">
+									    	{{director.name}}
+									    </span>
+							    	</span>
+							    </div>
+						    </div>
+
+						  	<span class="md-subhead">Reparto</span>
+						  	<div class="md-chips">
+							    <div ng-repeat="actor in movie.people | filter:{ type: 'CAST' } | limitTo: 6"  >
+								    <span class="md-chip md-readonly">
+									    <span class="md-chip-content">
+									    	{{actor.name}}
+									    </span>
+							    	</span>
+							    </div>
+						    </div>
+
 
 				          </md-card-title-text>
 				          

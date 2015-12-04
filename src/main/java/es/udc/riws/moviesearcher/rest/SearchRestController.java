@@ -38,7 +38,7 @@ public class SearchRestController {
         	movies = Searcher.buscar(query);
         } else {
         	// Si no hay ninguna consulta se devuelven todas las películas
-        	movies = apiService.getMovies();
+//        	movies = apiService.getMovies();
         }
         return movies;
     }

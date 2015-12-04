@@ -27,13 +27,16 @@ md-card {
  	padding: 0;
 	margin: 0;
     font-size: 12px;
-    line-height: 30px;
-    min-height: 30px;
+    line-height: 24px;
+    min-height: 24px;
     min-width: 60px;
 }
 
 /* Formulario */
 #bloqueControl {
     text-align: center;
+}
 
+.md-chip {
+	background: rgb(224,224,224);
 }

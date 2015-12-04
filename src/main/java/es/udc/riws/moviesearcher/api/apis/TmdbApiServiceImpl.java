@@ -10,34 +10,44 @@ import es.udc.riws.moviesearcher.model.Person;
 import es.udc.riws.moviesearcher.model.Person.TypePerson;
 import info.movito.themoviedbapi.TmdbApi;
 import info.movito.themoviedbapi.TmdbMovies;
+import info.movito.themoviedbapi.model.Credits;
 import info.movito.themoviedbapi.model.Genre;
 import info.movito.themoviedbapi.model.MovieDb;
 import info.movito.themoviedbapi.model.core.MovieResultsPage;
 import info.movito.themoviedbapi.model.people.PersonCast;
+import info.movito.themoviedbapi.model.people.PersonCrew;
 
+/**
+ * Librería: https://github.com/holgerbrandl/themoviedbapi/
+ * 
+ * @author Carlos
+ *
+ */
 @Service
 public class TmdbApiServiceImpl {
 
 	public static final String API_KEY = "956651bac38135dfba7377945f6809a9";
 
-	private static final int NUM_PAGINAS = 1;
+	private static final int NUM_PAGINAS = 2;
 
 	public List<Movie> getMovies() {
 
-		TmdbMovies moviesTmdb = new TmdbApi(API_KEY).getMovies();
+		TmdbApi tmdbApi = new TmdbApi(API_KEY);
+
+		TmdbMovies moviesTmdb = tmdbApi.getMovies();
 
 		// Creamos una lista de películas
 		List<Movie> movies = new ArrayList<Movie>();
 		// Recuperamos las películas en español
 		for (int i = 1; i <= NUM_PAGINAS; i++) {
 			MovieResultsPage results = moviesTmdb.getPopularMovieList("es", i);
+			int processedMovies = 0;
 			for (MovieDb result : results) {
 
 				MovieDb movie = moviesTmdb.getMovie(result.getId(), "es");
 
 				// FIXME: Primero comprobar que no existe la película.
-				// Redefinir
-				// el método equals en Movie
+				// Redefinir el método equals en Movie
 
 				// Creamos una lista de géneros
 				List<String> genres = new ArrayList<String>();
@@ -48,20 +58,42 @@ public class TmdbApiServiceImpl {
 				}
 
 				// Actores
+				Credits credits = moviesTmdb.getCredits(result.getId());
 				List<Person> people = new ArrayList<>();
-				if (movie.getCast() != null) {
-					for (PersonCast personCast : movie.getCast()) {
+				if (credits.getCast() != null) {
+					for (PersonCast personCast : credits.getCast()) {
 						people.add(new Person(personCast.getName(), personCast.getCharacter(), personCast.getOrder(),
 								TypePerson.CAST));
 					}
 				}
 
-				// TODO: Directores y escritores. Añadir en people
+				// Directores y escritores
+				if (credits.getCrew() != null) {
+					for (PersonCrew personCast : credits.getCrew()) {
+						if (personCast.getJob().equals("Director")) {
+							people.add(
+									new Person(personCast.getName(), personCast.getJob(), null, TypePerson.DIRECTOR));
+						} else if (personCast.getJob().equals("Screenplay")) {
+							people.add(
+									new Person(personCast.getName(), personCast.getJob(), null, TypePerson.WRITER));
+						}
+					}
+				}
 
 				// Añadimos las películas recuperadas a la lista de
 				// películas
 				movies.add(new Movie(movie.getTitle(), movie.getOverview(), movie.getPosterPath(),
 						movie.getVoteAverage(), movie.getReleaseDate(), movie.getRuntime(), people, genres, null));
+
+				processedMovies++;
+				if (processedMovies == 10) {
+					System.out.println("Durmiendo");
+					try {
+						Thread.sleep(5000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
 			}
 		}
 

@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.es.SpanishAnalyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.FloatField;
@@ -26,8 +26,10 @@ public class Indexer {
 
 	public static void indexar(List<Movie> movies) {
 
+		// FIXME: Se están distinguiendo palabras con acento.
+		
 		// TODO: Configurar Analyzer
-		Analyzer analyzer = new SpanishAnalyzer(Version.LUCENE_48);
+		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_48);
 
 		File folder = new File(ConstantesLucene.directory);
 		// Borrar directorio antes de generar un nuevo índice
@@ -65,7 +67,7 @@ public class Indexer {
 			return doc;
 		}
 		doc.add(new TextField(ConstantesLucene.title, movie.getTitle(), Field.Store.YES));
-		
+
 		if (movie.getDescription() != null) {
 			doc.add(new TextField(ConstantesLucene.description, movie.getDescription(), Field.Store.YES));
 		}
@@ -76,23 +78,36 @@ public class Indexer {
 		if (movie.getVoteAverage() != null) {
 			doc.add(new FloatField(ConstantesLucene.voteAverage, movie.getVoteAverage(), Field.Store.YES));
 		}
-		
+
 		if (movie.getReleaseDate() != null) {
 			doc.add(new TextField(ConstantesLucene.releaseDate, movie.getReleaseDate(), Field.Store.YES));
 		}
-		
+
 		doc.add(new IntField(ConstantesLucene.runtime, movie.getRuntime(), Field.Store.YES));
-		
+
 		for (Person person : movie.getPeople()) {
-			String personToIndex = person.getName() + " | " + person.getCharacterName() + " | " + person.getOrder();
-			doc.add(new TextField(ConstantesLucene.cast, personToIndex, Field.Store.YES));
+			String personToIndex = person.getName() + ConstantesLucene.tokenize
+					+ person.getCharacterName() + ConstantesLucene.tokenize + person.getOrder();
+			
+			switch (person.getType()) {
+			case CAST:
+				doc.add(new TextField(ConstantesLucene.cast, personToIndex, Field.Store.YES));
+				break;
+			case DIRECTOR:
+				doc.add(new TextField(ConstantesLucene.directors, personToIndex, Field.Store.YES));
+				break;
+			case WRITER:
+				doc.add(new TextField(ConstantesLucene.writers, personToIndex, Field.Store.YES));
+				break;
+			default:
+				break;
+			}
 		}
-		
+
 		for (String genre : movie.getGenres()) {
 			doc.add(new TextField(ConstantesLucene.genres, genre, Field.Store.YES));
 		}
-		
-		
+
 		return doc;
 	}
 

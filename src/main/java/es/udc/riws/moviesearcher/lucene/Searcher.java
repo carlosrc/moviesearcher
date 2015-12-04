@@ -5,14 +5,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.es.SpanishAnalyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
-import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
@@ -29,7 +29,8 @@ public class Searcher {
 	public static List<Movie> buscar(String q) {
 		List<Movie> movies = new ArrayList<Movie>();
 
-		Analyzer analyzer = new SpanishAnalyzer(Version.LUCENE_48);
+		// TODO: Configurar Analyzer
+		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_48);
 		File folder = new File(ConstantesLucene.directory);
 		Directory directory;
 		try {
@@ -40,7 +41,8 @@ public class Searcher {
 			// TODO: Añadir el resto de campos a la búsqueda
 			String[] camposBusqueda = new String[] { ConstantesLucene.title, ConstantesLucene.description,
 					ConstantesLucene.duration, ConstantesLucene.year, ConstantesLucene.voteAverage,
-					ConstantesLucene.releaseDate, ConstantesLucene.runtime, ConstantesLucene.genres };
+					ConstantesLucene.releaseDate, ConstantesLucene.runtime, ConstantesLucene.cast,
+					ConstantesLucene.directors, ConstantesLucene.writers, ConstantesLucene.genres };
 			MultiFieldQueryParser parser = new MultiFieldQueryParser(Version.LUCENE_48, camposBusqueda, analyzer);
 			Query query = parser.parse(q);
 
@@ -62,11 +64,29 @@ public class Searcher {
 				List<Person> people = new ArrayList<Person>();
 				for (String personString : hitDoc.getValues(ConstantesLucene.cast)) {
 
-					String[] campos = personString.split(" | ");
+					String[] campos = personString.split(Pattern.quote(ConstantesLucene.tokenize));
 					if (campos != null && campos.length == 3) {
-						int orden = Integer.valueOf(campos[2]);
-
+						Integer orden = null;
+						if (campos[2] != null && !campos[2].equals("null")) {
+							orden = Integer.valueOf(campos[2]);
+						}
 						people.add(new Person(campos[0], campos[1], orden, TypePerson.CAST));
+					}
+				}
+
+				// Directores
+				for (String personString : hitDoc.getValues(ConstantesLucene.directors)) {
+					String[] campos = personString.split(Pattern.quote(ConstantesLucene.tokenize));
+					if (campos != null && campos.length > 0) {
+						people.add(new Person(campos[0], null, null, TypePerson.DIRECTOR));
+					}
+				}
+
+				// Escritores
+				for (String personString : hitDoc.getValues(ConstantesLucene.writers)) {
+					String[] campos = personString.split(Pattern.quote(ConstantesLucene.tokenize));
+					if (campos != null && campos.length > 0) {
+						people.add(new Person(campos[0], null, null, TypePerson.WRITER));
 					}
 				}
 
