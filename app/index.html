@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+	<link rel="stylesheet" href="css/angular-material.min.css">
+	<link rel="stylesheet" href="css/styles.css">
+
+	<script src="js/lib/angular.min.js"></script>
+	<script src="js/lib/angular-aria.min.js"></script>
+	<script src="js/lib/angular-animate.min.js"></script>
+	<script src="js/lib/angular-material.min.js"></script>
+	<script src="js/lib/angular-resource.js"></script>
+
+	<script src="js/app.js"></script>
+	<!-- <script src="js/services.js"></script> -->
+
+</head>
+<body>
+
+
+<section class="demo-container md-whiteframe-z1" md-theme="primary-theme">
+
+	<md-toolbar class="demo-toolbar md-primary">
+	    <div class="md-toolbar-tools">
+	      <h3 class="ng-binding">Buscador de películas</h3>
+	      <span flex="" class="flex"></span>
+
+	    </div>
+	  </md-toolbar>
+
+	<div id="form"  class="md-inline-form" ng-controller="MainController as main">
+		<md-content layout-padding layout="row" layout-sm="column">
+			<md-input-container>
+				<input ng-model="titulo" aria-label="titulo">
+			</md-input-container>
+		</md-content>
+
+		<md-button class="md-raised md-primary" ng-click="search()">Buscar</md-button>
+
+		<md-button class="md-raised " ng-click="index()">Generar índice</md-button>
+
+		<md-content class="md-padding" layout="row" layout-wrap layout-align="center start">
+			<div ng-show="movies.length">
+				<h2>Películas encontradas</h2>
+
+				<div ng-repeat="movie in movies">
+					<md-card>
+				        <md-card-title>
+				          <md-card-title-text>
+				            <span class="md-headline">{{movie.title}}</span>
+				            <span class="md-subhead">{{movie.description}}</span>
+				          </md-card-title-text>
+				          <md-card-title-media ng-show="movie.urlPoster">
+				            <div class="md-media-md card-media"><img src="https://image.tmdb.org/t/p/w185/{{movie.urlPoster}}" /></div>
+				          </md-card-title-media>
+				        </md-card-title>
+				        <md-card-actions layout="row" layout-align="end center">
+				          <!-- <md-button>Action 1</md-button>
+				          <md-button>Action 2</md-button> -->
+				        </md-card-actions>
+				      </md-card>
+			      </div>
+	    	</div>
+		</md-content>
+
+	</div>
+</section>
+
+</body>
+</html>

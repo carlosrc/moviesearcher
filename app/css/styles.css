@@ -1,0 +1,11 @@
+md-card md-card-title md-card-title-media .md-media-md {
+    height: 140px;
+    width: 112px;
+    margin-left: 10px;
+}
+
+md-card md-card-title md-card-title-media .md-media-md img {
+	height: 100%;
+	width: auto;
+	float: right;
+}
