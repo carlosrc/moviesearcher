@@ -27,6 +27,8 @@ public class PruebaController {
 //	}
 //
 //	
+	
+	// Método para buscar las películas 
 	@RequestMapping(value = "/buscar", method = RequestMethod.GET)
 	public String search() {
 
@@ -34,5 +36,14 @@ public class PruebaController {
 
 		return null;
 	}
+	
+/*	// Método para filtrar entre dos fechas
+	@RequestMapping(value = "/filter", method = RequestMethod.GET)
+	public String filter() {
+
+		apiService.getMovies();
+
+		return null;
+	}*/
 
 }

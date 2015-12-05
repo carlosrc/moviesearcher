@@ -112,7 +112,7 @@ public class Searcher {
 	}
 	
 /*	// Filtramos películas por anho de estreno
-	public static List<Movie> filtrar(String q1, String q2){
+	public static List<Movie> filter(String q1, String q2){
 		List<Movie> movies = new ArrayList<Movie>();
 		
 		// TODO: Configurar Analyzer
