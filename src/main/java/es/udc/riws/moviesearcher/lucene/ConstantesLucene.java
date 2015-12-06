@@ -8,7 +8,6 @@ public class ConstantesLucene {
 	public static String original_title 	= "originalTitle";
 	public static String description 		= "description";
 	public static String poster		 		= "poster";
-	public static String duration			= "duration";
 	public static String year 				= "year";
 	public static String voteAverage		= "voteAverage";
 	public static String releaseDate		= "releaseDate";

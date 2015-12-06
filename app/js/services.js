@@ -2,39 +2,45 @@
 
 app.service('Servicios', ['$resource', '$mdToast', function($resource) {
 
-  // $httpProvider.defaults.useXDomain = true;
-  // delete $httpProvider.defaults.headers.common['X-Requested-With'];
-
-  this.index = function (movies) {
+  this.index = function (movies, loading) {
       console.log("Index method");
       var MovieService = $resource('http://www.localhost:8080/moviesearcher/indexar', 
         {}, {query: {method: 'GET',  isArray: true}});
       
       // TODO: Mostrar toast cuando obtenga true o false. Bloquear pantalla?
-      MovieService.query({}, function(movie) {
+      MovieService.query({}, function(movie) {       
           angular.forEach(movie, function (item) {
               if (item.title) {
                   movies.push(item);
               }         
           });
+          loading.valor = false;
+      }, function (error) {
+          loading.valor = false;
       });
   };
 
-    this.search = function (query, movies) {
-      console.log("Search method:" + query);
-      var MovieService = $resource('http://www.localhost:8080/moviesearcher/search', 
-        {}, {query: {method: 'GET',  isArray: true, params: {q: query}}});
+  this.searchAll = function (query, movies, loading) {
+    this.search(null, null, null, null, 0, 0, 0.01, movies, loading);
+  }
 
-      MovieService.query({q:query}, function(movie) {
-          angular.forEach(movie, function (item) {
-              if (item.title) {
-                  movies.push(item);
-              }         
-          });
-      });
+  this.search = function (query, title, description, runtime, yearInit, yearEnd, minVote, movies, loading) {
+    console.log("Search method:" + query);
+    var MovieService = $resource('http://www.localhost:8080/moviesearcher/search', 
+      {}, {query: {method: 'GET',  isArray: true, params: {q: query, tit: title, desc: description, runtime: runtime, 
+        yearInit: yearInit, yearEnd: yearEnd, minVote: minVote}}});
 
-    };
+    MovieService.query({q:query}, function(movie) {
+        angular.forEach(movie, function (item) {
+            if (item.title) {
+                movies.push(item);
+            }
+        });
 
-
+        loading.valor = false;
+    }, function (error) {
+        loading.valor = false;
+    });
+  };
 
 }]);

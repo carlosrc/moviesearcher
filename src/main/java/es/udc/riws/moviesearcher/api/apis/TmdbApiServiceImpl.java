@@ -28,7 +28,9 @@ public class TmdbApiServiceImpl {
 
 	public static final String API_KEY = "956651bac38135dfba7377945f6809a9";
 
-	private static final int NUM_PAGINAS = 2;
+	private static final int NUM_PAGINAS = 3;
+
+	private static final int TIME_TO_SLEEP = 8000;
 
 	public List<Movie> getMovies() {
 
@@ -40,6 +42,9 @@ public class TmdbApiServiceImpl {
 		List<Movie> movies = new ArrayList<Movie>();
 		// Recuperamos las películas en español
 		for (int i = 1; i <= NUM_PAGINAS; i++) {
+			if (i > 1) {
+				dormir();
+			}
 			MovieResultsPage results = moviesTmdb.getPopularMovieList("es", i);
 			int processedMovies = 0;
 			for (MovieDb result : results) {
@@ -74,8 +79,7 @@ public class TmdbApiServiceImpl {
 							people.add(
 									new Person(personCast.getName(), personCast.getJob(), null, TypePerson.DIRECTOR));
 						} else if (personCast.getJob().equals("Screenplay")) {
-							people.add(
-									new Person(personCast.getName(), personCast.getJob(), null, TypePerson.WRITER));
+							people.add(new Person(personCast.getName(), personCast.getJob(), null, TypePerson.WRITER));
 						}
 					}
 				}
@@ -87,18 +91,22 @@ public class TmdbApiServiceImpl {
 
 				processedMovies++;
 				if (processedMovies == 10) {
-					System.out.println("Durmiendo");
-					try {
-						Thread.sleep(5000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
+					dormir();
 				}
 			}
 		}
 
 		return movies;
 
+	}
+
+	private void dormir() {
+		try {
+			System.out.println("Durmiendo " + TIME_TO_SLEEP + "ms");
+			Thread.sleep(TIME_TO_SLEEP);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

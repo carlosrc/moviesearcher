@@ -81,6 +81,9 @@ public class Indexer {
 
 		if (movie.getReleaseDate() != null) {
 			doc.add(new TextField(ConstantesLucene.releaseDate, movie.getReleaseDate(), Field.Store.YES));
+			String yearString = movie.getReleaseDate().split("-")[0];
+			int year = Integer.valueOf(yearString);
+			doc.add(new IntField(ConstantesLucene.year, year, Field.Store.NO));
 		}
 
 		doc.add(new IntField(ConstantesLucene.runtime, movie.getRuntime(), Field.Store.YES));
