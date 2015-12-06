@@ -38,7 +38,7 @@ public class SearchRestController {
 			@RequestParam(value = "yearEnd", required = false) Integer yearEnd,
 			@RequestParam(value = "minVote", required = false) Float minVoteAverage,
 			@RequestParam(value = "runtime", required = false) Integer runtime) {
-		System.out.println("buscar:" + query);
+		System.out.println("buscar:" + query); 
 
 		List<Movie> movies = new ArrayList<Movie>();
 		if (query == null || query.equals("")) {

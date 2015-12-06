@@ -36,7 +36,7 @@ public class Searcher {
 	public static List<Movie> buscar(String q, String qTitle, String qDescription, Integer qYear, Integer qYearInit,
 			Integer qYearEnd, Float qMinVoteAverage, Integer qRuntime) {
 		List<Movie> movies = new ArrayList<Movie>();
-
+ 
 		// TODO: Configurar Analyzer
 		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_48);
 		File folder = new File(ConstantesLucene.directory);
