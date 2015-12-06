@@ -4,8 +4,7 @@ import java.util.List;
 
 public class Movie {
 
-	// TODO: Añadir campos: persona (director, actores o escritores), géneros,
-	// duración, año de estreno, nota
+	private Long id;
 
 	private String title;
 
@@ -15,9 +14,9 @@ public class Movie {
 
 	private Float voteAverage;
 
-	private String releaseDate;
+	private Integer year;
 
-	private int runtime;
+	private Integer runtime;
 
 	private List<Person> people;
 
@@ -28,9 +27,10 @@ public class Movie {
 	// TODO: Normalizar resultado del 0 al 1 en función del máximo score
 	private Float score;
 
-	public Movie(String title, String description, String urlPoster, Float voteAverage, String releaseDate, int runtime,
-			List<Person> people, List<String> genres, Float score) {
+	public Movie(Long id, String title, String description, String urlPoster, Float voteAverage, Integer year,
+			Integer runtime, List<Person> people, List<String> genres) {
 		super();
+		this.id = id;
 		this.title = title;
 		this.description = description;
 		this.urlPoster = urlPoster;
@@ -38,9 +38,21 @@ public class Movie {
 		this.runtime = runtime;
 		this.people = people;
 		this.genres = genres;
-		this.releaseDate = releaseDate;
+		this.year = year;
+	}
 
+	public Movie(Long id, String title, String description, String urlPoster, Float voteAverage, Integer year,
+			Integer runtime, List<Person> people, List<String> genres, Float score) {
+		this(id, title, description, urlPoster, voteAverage, year, runtime, people, genres);
 		this.score = score;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getTitle() {
@@ -91,19 +103,19 @@ public class Movie {
 		this.genres = genres;
 	}
 
-	public String getReleaseDate() {
-		return releaseDate;
+	public Integer getYear() {
+		return year;
 	}
 
-	public void setReleaseDate(String releaseDate) {
-		this.releaseDate = releaseDate;
+	public void setYear(Integer year) {
+		this.year = year;
 	}
 
-	public int getRuntime() {
+	public Integer getRuntime() {
 		return runtime;
 	}
 
-	public void setRuntime(int runtime) {
+	public void setRuntime(Integer runtime) {
 		this.runtime = runtime;
 	}
 

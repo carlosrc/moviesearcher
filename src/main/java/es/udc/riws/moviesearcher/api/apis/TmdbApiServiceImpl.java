@@ -2,6 +2,7 @@ package es.udc.riws.moviesearcher.api.apis;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.stereotype.Service;
 
@@ -28,9 +29,11 @@ public class TmdbApiServiceImpl {
 
 	public static final String API_KEY = "956651bac38135dfba7377945f6809a9";
 
-	private static final int NUM_PAGINAS = 3;
+	private static final int NUM_PAGINAS = 1;
 
-	private static final int TIME_TO_SLEEP = 8000;
+	private static final int TIME_TO_SLEEP = 4000;
+
+	private final AtomicLong counter = new AtomicLong();
 
 	public List<Movie> getMovies() {
 
@@ -76,18 +79,21 @@ public class TmdbApiServiceImpl {
 				if (credits.getCrew() != null) {
 					for (PersonCrew personCast : credits.getCrew()) {
 						if (personCast.getJob().equals("Director")) {
-							people.add(
-									new Person(personCast.getName(), personCast.getJob(), null, TypePerson.DIRECTOR));
+							people.add(new Person(personCast.getName(), personCast.getDepartment(), null,
+									TypePerson.DIRECTOR));
 						} else if (personCast.getJob().equals("Screenplay")) {
-							people.add(new Person(personCast.getName(), personCast.getJob(), null, TypePerson.WRITER));
+							people.add(new Person(personCast.getName(), personCast.getDepartment(), null,
+									TypePerson.WRITER));
 						}
 					}
 				}
 
-				// Añadimos las películas recuperadas a la lista de
-				// películas
-				movies.add(new Movie(movie.getTitle(), movie.getOverview(), movie.getPosterPath(),
-						movie.getVoteAverage(), movie.getReleaseDate(), movie.getRuntime(), people, genres, null));
+				String yearString = movie.getReleaseDate().split("-")[0];
+				int year = Integer.valueOf(yearString);
+
+				// Añadimos las películas recuperadas a la lista de películas
+				movies.add(new Movie(counter.incrementAndGet(), movie.getTitle(), movie.getOverview(),
+						movie.getPosterPath(), movie.getVoteAverage(), year, movie.getRuntime(), people, genres));
 
 				processedMovies++;
 				if (processedMovies == 10) {

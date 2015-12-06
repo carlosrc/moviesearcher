@@ -4,22 +4,19 @@
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
 	<link rel="stylesheet" href="css/angular-material.min.css">
-	<link rel="stylesheet" href="css/toast.min.css">
 	<link rel="stylesheet" href="css/styles.css">
 
 	<script src="js/lib/angular.min.js"></script>
-	<script src="js/lib/angular-aria.min.js"></script>
 	<script src="js/lib/angular-animate.min.js"></script>
+	<script src="js/lib/angular-aria.min.js"></script>
 	<script src="js/lib/angular-material.min.js"></script>
 	<script src="js/lib/angular-resource.js"></script>
 
-	<script src="js/lib/toast.min.js"></script>
-
-
+	<!-- Mi JavaScript -->
 	<script src="js/app.js"></script>
 	<script src="js/services.js"></script> 
 
-<script src="js/lib/dd-text-collapse.js"></script>
+	<script src="js/lib/dd-text-collapse.js"></script>
 
 	<title>Buscador de películas</title>
 
@@ -60,28 +57,39 @@
 						</md-input-container>
 					</div>
 
-					<!-- Chips para géneros y actores
-
-					<md-input-container>
-						<input ng-model="genres" aria-label="géneros" placeholder="Géneros">
-					</md-input-container>
-					-->
+					<div layout layout-sm="column">
+						<md-chips ng-model="genres" readonly="false" placeholder="Géneros"
+       						delete-button-label="Eliminar género" md-separator-keys="keys"
+        					delete-hint="Pulsa para eliminar el género"
+        					secondary-placeholder="Géneros">
+					    </md-chips>
+						<md-chips ng-model="cast" readonly="false" placeholder="Reparto/personaje"
+       						delete-button-label="Eliminar actor/actriz" md-separator-keys="keys"
+        					delete-hint="Pulsa para eliminar el actor/actriz"
+        					secondary-placeholder="Reparto/personaje">
+					    </md-chips>
+					    <md-chips ng-model="director" readonly="false" placeholder="Director"
+       						delete-button-label="Eliminar director" md-separator-keys="keys"
+        					delete-hint="Pulsa para eliminar el director"
+        					secondary-placeholder="Director">
+					    </md-chips>
+					</div>
  					
 					<div layout layout-sm="column">
 						<div flex="10" layout layout-align="center center">
 					        <span class="md-body-1">Votación mínima</span>
 					    </div>
-						<md-slider flex md-discrete ng-model="minVote" step="0.5" min="0" max="10" aria-label="votod mínimo"></md-slider>
+						<md-slider flex md-discrete ng-model="minVote" step="0.5" min="0" max="10" aria-label="voto mínimo"></md-slider>
 						
 						<div flex="10" layout layout-align="center center">
 					        <span class="md-body-1">Año inicial</span>
 					    </div>
-						<md-slider flex md-discrete ng-model="yearInit" step="1" min="1900" max="2015" aria-label="rating"></md-slider>
+						<md-slider flex md-discrete ng-model="yearInit" step="1" min="1900" max="2015" aria-label="año de inicio"></md-slider>
 
 						<div flex="10" layout layout-align="center center">
 					        <span class="md-body-1">Año final</span>
 					    </div>
-						<md-slider flex md-discrete ng-model="yearEnd" step="1" min="1900" max="2015" aria-label="rating" ></md-slider>
+						<md-slider flex md-discrete ng-model="yearEnd" step="1" min="1900" max="2015" aria-label="año final" ></md-slider>
 
 					</div>
 				</md-content>
@@ -104,10 +112,15 @@
 				        <md-card-title>
 				        <md-card-title-media ng-show="movie.urlPoster">
 				            <div class="md-media-md card-media"><img src="https://image.tmdb.org/t/p/w185/{{movie.urlPoster}}" /></div>
+				            
+				            <!--
+				            <md-button class="md-raised md-accent" ng-click="showSimilarMovies($event, movie.id)" >Similares</md-button>
+							-->
 				          </md-card-title-media>
 				          <md-card-title-text>
-				            <span class="md-headline">{{movie.title}} ({{movie.releaseDate}})
+				            <span class="md-headline">{{movie.title}}
 				            <md-button class="md-fab md-mini md-primary" aria-label="vote average">{{movie.voteAverage}}</md-button>
+				            <span class="md-subhead"> ({{movie.year}}) </span>
 				            <span class="md-subhead" ng-show="movie.runtime > 0">{{movie.runtime}} min.</span>
 				            </span>
 
@@ -167,6 +180,100 @@
 	</div>
 
 </section>
+
+
+<script type="text/ng-template" id="temp1.html">
+	<md-dialog aria-label="Películas similares" ng-cloak>
+	  <form>
+	    <md-toolbar>
+	      <div class="md-toolbar-tools">
+	        <h2>Recomendaciones</h2>
+	        <span flex></span>
+	        <md-button class="md-icon-button" ng-click="cancel()">
+	          X
+	        </md-button>
+	      </div>
+	    </md-toolbar>
+	    <md-dialog-content ng-controller="MainController as main">
+
+		    <!-- FIXME: Cambiar loading por loadingSimilar y movies por similarMovies -->
+
+{{similarMovies}}
+
+			<div layout="row" layout-sm="column" layout-align="space-around" ng-show="loadingSimilar.valor">
+			    <md-progress-circular md-mode="indeterminate" md-diameter="72"></md-progress-circular>
+			</div> 
+
+			<div ng-repeat="movie in movies" class="fade ng-binding ng-scope">
+				<md-card>
+			        <md-card-title>
+			        <md-card-title-media ng-show="movie.urlPoster">
+			            <div class="md-media-md card-media"><img src="https://image.tmdb.org/t/p/w185/{{movie.urlPoster}}" /></div>
+			          </md-card-title-media>
+			          <md-card-title-text>
+			            <span class="md-headline">{{movie.title}}
+			            <md-button class="md-fab md-mini md-primary" aria-label="vote average">{{movie.voteAverage}}</md-button>
+			            <span class="md-subhead"> ({{movie.year}}) </span>
+			            <span class="md-subhead" ng-show="movie.runtime > 0">{{movie.runtime}} min.</span>
+			            </span>
+
+			            <span dd-text-collapse dd-text-collapse-max-length="250" dd-text-collapse-text="{{movie.description}}" class="md-body-1"></span>
+
+			            <span class="md-subhead">Géneros</span>
+						<md-chips
+					        ng-model="movie.genres"
+					        readonly="true"></md-chips>
+
+
+					    <span class="md-subhead">Director</span>
+					    <div class="md-chips">
+						    <div ng-repeat="director in movie.people | filter:{ type: 'DIRECTOR' }" >
+							    <span class="md-chip md-readonly">
+								    <span class="md-chip-content">
+								    	{{director.name}}
+								    </span>
+						    	</span>
+						    </div>
+					    </div>
+
+					    <!-- Colapsar reparto -->
+					  	<span class="md-subhead">Reparto</span>
+					  	<div class="md-chips">
+						    <div ng-repeat="actor in movie.people | filter:{ type: 'CAST' } | limitTo: 4"  >
+							    <span class="md-chip md-readonly">
+								    <span class="md-chip-content">
+								    	{{actor.name}}
+								    </span>
+						    	</span>
+						    </div>
+					    </div>
+
+					    <!-- Escritores -->
+
+
+			          </md-card-title-text>
+			          
+			        </md-card-title>
+
+			      </md-card>
+		      </div>
+
+
+
+	    </md-dialog-content>
+	    <md-dialog-actions layout="row">
+	      <span flex></span>
+	      <md-button ng-click="answer('not useful')">
+	       Not Useful
+	      </md-button>
+	      <md-button ng-click="answer('useful')" style="margin-right:20px;">
+	        Useful
+	      </md-button>
+	    </md-dialog-actions>
+	  </form>
+	</md-dialog>
+</script>
+
 
 </body>
 </html>

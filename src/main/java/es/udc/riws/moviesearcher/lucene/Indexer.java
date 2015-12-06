@@ -10,13 +10,13 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.FloatField;
 import org.apache.lucene.document.IntField;
+import org.apache.lucene.document.LongField;
 import org.apache.lucene.document.StoredField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.util.Version;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 
 import es.udc.riws.moviesearcher.model.Movie;
@@ -27,9 +27,9 @@ public class Indexer {
 	public static void indexar(List<Movie> movies) {
 
 		// FIXME: Se están distinguiendo palabras con acento.
-		
+
 		// TODO: Configurar Analyzer
-		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_48);
+		Analyzer analyzer = new StandardAnalyzer(ConstantesLucene.version);
 
 		File folder = new File(ConstantesLucene.directory);
 		// Borrar directorio antes de generar un nuevo índice
@@ -46,7 +46,7 @@ public class Indexer {
 		try {
 			directory = FSDirectory.open(folder);
 
-			IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_48, analyzer);
+			IndexWriterConfig config = new IndexWriterConfig(ConstantesLucene.version, analyzer);
 			IndexWriter iwriter = new IndexWriter(directory, config);
 
 			// Cada película, un documento
@@ -63,9 +63,15 @@ public class Indexer {
 	private static Document addMovie(Movie movie) {
 		Document doc = new Document();
 		// TODO: Añadir campos
+		if (movie.getId() == null) {
+			return doc;
+		}
 		if (movie.getTitle() == null) {
 			return doc;
 		}
+
+		doc.add(new LongField(ConstantesLucene.id, movie.getId(), Field.Store.YES));
+
 		doc.add(new TextField(ConstantesLucene.title, movie.getTitle(), Field.Store.YES));
 
 		if (movie.getDescription() != null) {
@@ -79,19 +85,18 @@ public class Indexer {
 			doc.add(new FloatField(ConstantesLucene.voteAverage, movie.getVoteAverage(), Field.Store.YES));
 		}
 
-		if (movie.getReleaseDate() != null) {
-			doc.add(new TextField(ConstantesLucene.releaseDate, movie.getReleaseDate(), Field.Store.YES));
-			String yearString = movie.getReleaseDate().split("-")[0];
-			int year = Integer.valueOf(yearString);
-			doc.add(new IntField(ConstantesLucene.year, year, Field.Store.NO));
+		if (movie.getYear() != null) {
+			// doc.add(new TextField(ConstantesLucene.releaseDate,
+			// movie.getReleaseDate(), Field.Store.NO));
+			doc.add(new IntField(ConstantesLucene.year, movie.getYear(), Field.Store.YES));
 		}
 
 		doc.add(new IntField(ConstantesLucene.runtime, movie.getRuntime(), Field.Store.YES));
 
 		for (Person person : movie.getPeople()) {
-			String personToIndex = person.getName() + ConstantesLucene.tokenize
-					+ person.getCharacterName() + ConstantesLucene.tokenize + person.getOrder();
-			
+			String personToIndex = person.getName() + ConstantesLucene.tokenize + person.getCharacterName()
+					+ ConstantesLucene.tokenize + person.getOrder();
+
 			switch (person.getType()) {
 			case CAST:
 				doc.add(new TextField(ConstantesLucene.cast, personToIndex, Field.Store.YES));
