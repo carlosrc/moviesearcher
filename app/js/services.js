@@ -25,14 +25,14 @@ app.service('Servicios', ['$resource', '$mdToast', function($resource, $mdToast)
   };
 
   this.searchAll = function (query, movies, loading) {
-    this.search(null, null, null, null, 0, 0, 0.01, null, null, null, movies, loading);
+    this.search(null, null, null, null, 0, 0, 0.01, null, null, null, false, movies, loading);
   }
 
-  this.search = function (query, title, description, runtime, yearInit, yearEnd, minVote, genres, cast, director, movies, loading) {
+  this.search = function (query, title, description, runtime, yearInit, yearEnd, minVote, genres, cast, director, strict, movies, loading) {
     console.log("Search method:" + query);
     var MovieService = $resource(this.servidor + '/moviesearcher/search', 
       {}, {query: {method: 'GET',  isArray: true, params: {q: query, tit: title, desc: description, runtime: runtime, 
-        yearInit: yearInit, yearEnd: yearEnd, minVote: minVote, genres: genres, cast: cast, director: director}}});
+        yearInit: yearInit, yearEnd: yearEnd, minVote: minVote, genres: genres, cast: cast, director: director, strict: strict}}});
 
     MovieService.query({q:query}, function(movie) {
         angular.forEach(movie, function (item) {

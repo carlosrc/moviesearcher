@@ -34,10 +34,13 @@ public class Searcher {
 
 	public static List<Movie> search(String q, String qTitle, String qDescription, Integer qYear, Integer qYearInit,
 			Integer qYearEnd, Float qMinVoteAverage, Integer qRuntime, String[] qGenres, String[] qCast,
-			String[] qDirectors) {
+			String[] qDirectors, Boolean strict) {
 		List<Movie> movies = new ArrayList<Movie>();
 
-		Occur ocurr = Occur.MUST;
+		Occur ocurr = Occur.SHOULD;
+		if (strict != null && strict) {
+			ocurr = Occur.MUST;
+		}
 
 		// TODO: Configurar Analyzer
 		Analyzer analyzer = new StandardAnalyzer(ConstantesLucene.version);
@@ -48,9 +51,7 @@ public class Searcher {
 			DirectoryReader ireader = DirectoryReader.open(directory);
 			IndexSearcher isearcher = new IndexSearcher(ireader);
 
-			// Añadir campos de búsqueda
-
-			// TODO: Buscar por intervalos, por campos, etc
+			// Campos de búsqueda
 
 			BooleanQuery booleanQuery = new BooleanQuery();
 			// Búsqueda general
@@ -77,8 +78,8 @@ public class Searcher {
 				booleanQuery.add(NumericRangeQuery.newIntRange(ConstantesLucene.year, qYear, qYear, true, true), ocurr);
 			}
 
-			qYearInit = qYearInit == 0 ? null : qYearInit;
-			qYearEnd = qYearEnd == 0 ? null : qYearEnd;
+			qYearInit = qYearInit != null && qYearInit == 0 ? null : qYearInit;
+			qYearEnd = qYearEnd != null && qYearEnd == 0 ? null : qYearEnd;
 			if (qYearInit != null || qYearEnd != null) {
 				booleanQuery.add(NumericRangeQuery.newIntRange(ConstantesLucene.year, qYearInit, qYearEnd, true, true),
 						ocurr);
@@ -113,6 +114,11 @@ public class Searcher {
 				}
 			}
 
+			// Si no existen condiciones, devolvemos todas las películas
+			if (booleanQuery.clauses().isEmpty()) {
+				booleanQuery.add(NumericRangeQuery.newFloatRange(ConstantesLucene.voteAverage, 0.1F, null, true, true),
+						ocurr);
+			}
 			TopDocs topdocs = isearcher.search(booleanQuery, null, 1000);
 
 			// Procesamos los resultados

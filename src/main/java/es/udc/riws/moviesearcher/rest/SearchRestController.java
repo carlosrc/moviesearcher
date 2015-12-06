@@ -42,7 +42,8 @@ public class SearchRestController {
 			@RequestParam(value = "runtime", required = false) Integer runtime,
 			@RequestParam(value = "genres", required = false) String[] genres,
 			@RequestParam(value = "cast", required = false) String[] cast,
-			@RequestParam(value = "director", required = false) String[] director) {
+			@RequestParam(value = "director", required = false) String[] director,
+			@RequestParam(value = "strict", required = false) Boolean strict) {
 
 		List<Movie> movies = new ArrayList<Movie>();
 		if (query == null || query.equals("")) {
@@ -50,7 +51,7 @@ public class SearchRestController {
 			query = "*:*";
 		}
 		movies = Searcher.search(query, title, description, year, yearInit, yearEnd, minVoteAverage, runtime, genres,
-				cast, director);
+				cast, director, strict);
 		return movies;
 	}
 

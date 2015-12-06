@@ -19,7 +19,8 @@ app.controller('MainController', ['$scope', 'Servicios', '$mdConstant', '$mdDial
 		$scope.minVote = 0;
 		$scope.genres = [];
 		$scope.cast = [];
-		$scope.director = [];		
+		$scope.director = [];
+		$scope.strict = false;
 	};
 	$scope.movies = [];
 	$scope.similarMovies = [];
@@ -32,7 +33,7 @@ app.controller('MainController', ['$scope', 'Servicios', '$mdConstant', '$mdDial
 		$scope.loading.valor = true;
         Servicios.search($scope.query, $scope.title, $scope.description, $scope.runtime,
          $scope.yearInit, $scope.yearEnd, $scope.minVote, $scope.genres, $scope.cast, $scope.director, 
-         $scope.movies, $scope.loading);
+         $scope.strict, $scope.movies, $scope.loading);
     };
 
     $scope.searchAll = function () {

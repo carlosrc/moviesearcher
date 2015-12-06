@@ -73,21 +73,29 @@
         					delete-hint="Pulsa para eliminar el director"
         					secondary-placeholder="Director">
 					    </md-chips>
+
+
+					    <md-checkbox ng-model="strict" aria-label="búsqueda estricta" class="label">
+				        	Búsqueda estricta
+				        	<md-tooltip>
+					        	Si seleccionas la casilla se mostrarán los resultados que contengan todos los campos de búsqueda
+					        </md-tooltip>
+				        </md-checkbox>
 					</div>
  					
 					<div layout layout-sm="column">
 						<div flex="10" layout layout-align="center center">
-					        <span class="md-body-1">Votación mínima</span>
+					        <span class="md-body-1 label">Votación mínima</span>
 					    </div>
 						<md-slider flex md-discrete ng-model="minVote" step="0.5" min="0" max="10" aria-label="voto mínimo"></md-slider>
 						
 						<div flex="10" layout layout-align="center center">
-					        <span class="md-body-1">Año inicial</span>
+					        <span class="md-body-1 label">Año inicial</span>
 					    </div>
 						<md-slider flex md-discrete ng-model="yearInit" step="1" min="1900" max="2015" aria-label="año de inicio"></md-slider>
 
 						<div flex="10" layout layout-align="center center">
-					        <span class="md-body-1">Año final</span>
+					        <span class="md-body-1 label">Año final</span>
 					    </div>
 						<md-slider flex md-discrete ng-model="yearEnd" step="1" min="1900" max="2015" aria-label="año final" ></md-slider>
 
