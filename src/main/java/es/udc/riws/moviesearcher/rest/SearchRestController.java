@@ -46,10 +46,7 @@ public class SearchRestController {
 			@RequestParam(value = "strict", required = false) Boolean strict) {
 
 		List<Movie> movies = new ArrayList<Movie>();
-		if (query == null || query.equals("")) {
-			// Si la consulta es vacía, mostramos todos los elementos
-			query = "*:*";
-		}
+
 		movies = Searcher.search(query, title, description, year, yearInit, yearEnd, minVoteAverage, runtime, genres,
 				cast, director, strict);
 		return movies;

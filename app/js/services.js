@@ -25,7 +25,7 @@ app.service('Servicios', ['$resource', '$mdToast', function($resource, $mdToast)
   };
 
   this.searchAll = function (query, movies, loading) {
-    this.search(null, null, null, null, 0, 0, 0.01, null, null, null, false, movies, loading);
+    this.search(null, null, null, null, null, null, 0.01, null, null, null, false, movies, loading);
   }
 
   this.search = function (query, title, description, runtime, yearInit, yearEnd, minVote, genres, cast, director, strict, movies, loading) {

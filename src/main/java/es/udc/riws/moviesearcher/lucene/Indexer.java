@@ -33,7 +33,6 @@ public class Indexer {
 
 		File folder = new File(ConstantesLucene.directory);
 		// Borrar directorio antes de generar un nuevo índice
-		// FIXME: Si el directorio no se elimina mostrar un error
 		if (folder.exists()) {
 			try {
 				FileUtils.deleteDirectory(folder);

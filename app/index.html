@@ -24,17 +24,17 @@
 <body>
 
 
-<section class="demo-container md-whiteframe-z1" md-theme="primary-theme" ng-controller="MainController as main" >
+<section class="container md-whiteframe-z1" md-theme="primary-theme" ng-controller="MainController as main" >
 
-	<md-toolbar class="demo-toolbar md-primary">
+	<md-toolbar class="demo-toolbar md-primary site-content-toolbar" >
 	    <div class="md-toolbar-tools">
 	      <h3 class="ng-binding">Buscador de películas</h3>
 	      <span flex="" class="flex"></span>
-	      	<md-button class="md-raised" ng-click="resetSearch()">Reset</md-button>
+	      	
 			<md-button class="md-raised" ng-click="searchAll()">Mostrar todas</md-button>
 			<md-button class="md-raised" ng-click="index()">Generar índice</md-button>
 	    </div>
-	  </md-toolbar>
+	</md-toolbar>
 
 	<div class="md-inline-form" ng-cloak>
 
@@ -53,7 +53,7 @@
 							<input ng-model="description" aria-label="descripción" placeholder="Descripción">
 						</md-input-container>
 						<md-input-container flex>
-							<input ng-model="runtime" aria-label="duración" placeholder="Duración (minutos)">
+							<input ng-model="runtime" aria-label="duración" placeholder="Duración (minutos)" type="number">
 						</md-input-container>
 					</div>
 
@@ -103,6 +103,7 @@
 				</md-content>
 
 				<md-button class="md-raised md-primary" ng-click="search()" >Buscar</md-button>
+				<md-button class="md-raised" ng-click="resetSearch()">Reset</md-button>
 			</form>
 
 		</div>

@@ -1,4 +1,8 @@
 
+.container, md-content.md-primary-theme-theme {
+	background-color: #f6f6f6;
+}
+
 /* Botón flotante */
 .float-right {
     float: right;
