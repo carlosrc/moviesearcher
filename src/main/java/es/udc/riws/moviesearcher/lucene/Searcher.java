@@ -55,7 +55,7 @@ public class Searcher {
 
 			BooleanQuery booleanQuery = new BooleanQuery();
 			// Búsqueda general
-			if (q != null && !q.equals("*:*")) {
+			if (q != null && !q.equals("")) {
 				// Todos los campos de búsqueda
 				String[] camposBusqueda = new String[] { ConstantesLucene.title, ConstantesLucene.description,
 						ConstantesLucene.year, ConstantesLucene.voteAverage, ConstantesLucene.runtime,
