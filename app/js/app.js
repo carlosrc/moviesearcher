@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module( 'myApp', ['ngResource', 'ngMaterial', 'ngAnimate'] );
+var app = angular.module( 'myApp', ['ngResource', 'ngMaterial', 'ngAnimate', 'ui.bootstrap'] );
 
 
 app.controller('MainController', ['$scope', 'Servicios', '$mdConstant', '$mdDialog', '$mdMedia', '$document',  
@@ -88,6 +88,7 @@ app.controller('MainController', ['$scope', 'Servicios', '$mdConstant', '$mdDial
 	    });
 	  };
 
+$scope.isCollapsed = true;
 
 }]);
 

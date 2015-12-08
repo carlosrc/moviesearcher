@@ -6,6 +6,7 @@
 	<link rel="stylesheet" href="css/angular-material.min.css">
 	<link rel="stylesheet" href="css/styles.css">
 
+	<!-- Librerías -->
 	<script src="js/lib/angular.min.js"></script>
 	<script src="js/lib/angular-animate.min.js"></script>
 	<script src="js/lib/angular-aria.min.js"></script>
@@ -16,6 +17,8 @@
 	<script src="js/app.js"></script>
 	<script src="js/services.js"></script> 
 
+	<!-- Librerías modificadas -->
+	<script src="js/lib/ui-bootstrap-custom-tpls-0.14.3.min.js"></script>
 	<script src="js/lib/dd-text-collapse.js"></script>
 
 	<title>Buscador de películas</title>
@@ -63,10 +66,10 @@
         					delete-hint="Pulsa para eliminar el género"
         					secondary-placeholder="Géneros">
 					    </md-chips>
-						<md-chips ng-model="cast" readonly="false" placeholder="Reparto/personaje"
+						<md-chips ng-model="cast" readonly="false" placeholder="Reparto"
        						delete-button-label="Eliminar actor/actriz" md-separator-keys="keys"
         					delete-hint="Pulsa para eliminar el actor/actriz"
-        					secondary-placeholder="Reparto/personaje">
+        					secondary-placeholder="Reparto">
 					    </md-chips>
 					    <md-chips ng-model="director" readonly="false" placeholder="Director"
        						delete-button-label="Eliminar director" md-separator-keys="keys"
@@ -152,17 +155,20 @@
 							    </div>
 						    </div>
 
-						    <!-- Colapsar reparto -->
-						  	<span class="md-subhead">Reparto</span>
-						  	<div class="md-chips">
-							    <div ng-repeat="actor in movie.people | filter:{ type: 'CAST' } | limitTo: 6"  >
-								    <span class="md-chip md-readonly">
-									    <span class="md-chip-content">
-									    	{{actor.name}}
-									    </span>
-							    	</span>
+						    <!-- Colapsar reparto -->			    
+						  	<span class="md-subhead">Reparto</span>						  	
+						  	<div uib-collapse="isCollapsed">
+							  	<div class="md-chips" >
+								    <div ng-repeat="actor in movie.people | filter:{ type: 'CAST' } | limitTo: 15"  >
+									    <span class="md-chip md-readonly">
+										    <span class="md-chip-content">
+										    	{{actor.name}}
+										    </span>
+								    	</span>
+								    </div>
 							    </div>
 						    </div>
+						    <md-button class="collapse-text-toggle md-accent" ng-click="isCollapsed = !isCollapsed">{{isCollapsed ? "mostrar" : "ocultar"}}</md-button>
 
 						    <!-- Escritores -->
 
@@ -267,7 +273,7 @@
 	    </md-dialog-content>
 	    <md-dialog-actions layout="row">
 	      <span flex></span>
-	      <md-button class="md-primary" style="margin-right:20px;">
+	      <md-button class="md-primary" style="margin-right:20px;" ng-click="cancel()">
 	        Cerrar
 	      </md-button>
 	    </md-dialog-actions>
