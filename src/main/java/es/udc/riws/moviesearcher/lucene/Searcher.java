@@ -8,13 +8,13 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queries.mlt.MoreLikeThis;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
@@ -32,9 +32,9 @@ import es.udc.riws.moviesearcher.model.Person.TypePerson;
 
 public class Searcher {
 
-	public static List<Movie> search(String q, String qTitle, String qDescription, Integer qYear, Integer qYearInit,
-			Integer qYearEnd, Float qMinVoteAverage, Integer qRuntime, String[] qGenres, String[] qCast,
-			String[] qDirectors, Boolean strict) {
+	public static List<Movie> search(String q, String qTitle, String qDescription, Integer qYearInit, Integer qYearEnd,
+			Float qMinVoteAverage, Integer qRuntime, String[] qGenres, String[] qCast, String[] qDirectors,
+			Boolean strict) {
 		List<Movie> movies = new ArrayList<Movie>();
 
 		Occur ocurr = Occur.SHOULD;
@@ -43,7 +43,7 @@ public class Searcher {
 		}
 
 		// TODO: Configurar Analyzer
-		Analyzer analyzer = new StandardAnalyzer(ConstantesLucene.version);
+		Analyzer analyzer = ConstantesLucene.getAnalyzer();
 		File folder = new File(ConstantesLucene.directory);
 		Directory directory;
 		try {
@@ -54,6 +54,7 @@ public class Searcher {
 			// Campos de búsqueda
 
 			BooleanQuery booleanQuery = new BooleanQuery();
+
 			// Búsqueda general
 			if (q != null && !q.equals("")) {
 				// Todos los campos de búsqueda
@@ -71,11 +72,6 @@ public class Searcher {
 			}
 			if (qDescription != null && !qDescription.equals("")) {
 				booleanQuery.add(new TermQuery(new Term(ConstantesLucene.description, qDescription)), ocurr);
-			}
-
-			// TODO: Este campo todavía no se muestra en la interfaz
-			if (qYear != null) {
-				booleanQuery.add(NumericRangeQuery.newIntRange(ConstantesLucene.year, qYear, qYear, true, true), ocurr);
 			}
 
 			qYearInit = qYearInit != null && qYearInit == 0 ? null : qYearInit;
@@ -102,6 +98,7 @@ public class Searcher {
 				}
 			}
 
+			// FIXME: La búsqueda por nombres de personas no funciona bien
 			if (qCast != null) {
 				for (String qActor : qCast) {
 					booleanQuery.add(new TermQuery(new Term(ConstantesLucene.cast, qActor)), ocurr);
@@ -119,7 +116,10 @@ public class Searcher {
 				booleanQuery.add(NumericRangeQuery.newFloatRange(ConstantesLucene.voteAverage, 0.1F, null, true, true),
 						ocurr);
 			}
-			TopDocs topdocs = isearcher.search(booleanQuery, null, 1000);
+
+			Query query = new QueryParser(ConstantesLucene.version, ConstantesLucene.title, analyzer)
+					.parse(booleanQuery.toString());
+			TopDocs topdocs = isearcher.search(query, null, 1000);
 
 			// Procesamos los resultados
 			movies = processResults(topdocs.scoreDocs, isearcher);
@@ -137,7 +137,7 @@ public class Searcher {
 	public static List<Movie> findSimilar(long id) {
 		List<Movie> movies = new ArrayList<Movie>();
 
-		Analyzer analyzer = new StandardAnalyzer(ConstantesLucene.version);
+		Analyzer analyzer = ConstantesLucene.getAnalyzer();
 		File folder = new File(ConstantesLucene.directory);
 		Directory directory;
 		try {
@@ -152,20 +152,31 @@ public class Searcher {
 				return movies;
 			}
 			int docId = topdoc.scoreDocs[0].doc;
+			List<Movie> initialMovies = processResults(topdoc.scoreDocs, isearcher);
+			Movie initialMovie = null;
+			if (initialMovies != null && !initialMovies.isEmpty()) {
+				initialMovie = initialMovies.get(0);
+			} else {
+				return movies;
+			}
+			System.out.println("Initial movie: " + initialMovie.getTitle());
+
+			// ¿Generar document con los campos que vamos a buscar?
 
 			// Similares
 			// TODO: Configurar parámetros de similitud. Que es termfreq y
 			// docfreq? Habrá problemas con los campos numéricos, como año, y
-			// director y casting no sé como está funcionando
+			// director y casting no sé como está funcionando. Debe de buscar
+			// por palabras sueltas...
 			MoreLikeThis mlt = new MoreLikeThis(ireader);
-			mlt.setMinTermFreq(1);
+			mlt.setMinTermFreq(0);
 			mlt.setMinDocFreq(0);
-			// mlt.set
-			mlt.setFieldNames(new String[] { ConstantesLucene.genres });
+			mlt.setFieldNames(
+					new String[] { ConstantesLucene.genres, ConstantesLucene.cast, ConstantesLucene.directors });
 			mlt.setAnalyzer(analyzer);
 
 			Query queryLike = mlt.like(docId);
-			TopDocs topdocs = isearcher.search(queryLike, 100);
+			TopDocs topdocs = isearcher.search(queryLike, 10);
 
 			// Procesamos los resultados
 			movies = processResults(topdocs.scoreDocs, isearcher);
@@ -200,22 +211,28 @@ public class Searcher {
 			// Actores
 			List<Person> people = new ArrayList<Person>();
 			for (String personString : hitDoc.getValues(ConstantesLucene.cast)) {
-				String[] campos = personString.split(Pattern.quote(ConstantesLucene.tokenize));
-				if (campos != null && campos.length == 3) {
-					Integer orden = null;
-					if (campos[2] != null && !campos[2].equals("null")) {
-						orden = Integer.valueOf(campos[2]);
-					}
-					people.add(new Person(campos[0], campos[1], orden, TypePerson.CAST));
-				}
+				// String[] campos =
+				// personString.split(Pattern.quote(ConstantesLucene.tokenize));
+				// if (campos != null && campos.length == 3) {
+				// Integer orden = null;
+				// if (campos[2] != null && !campos[2].equals("null")) {
+				// orden = Integer.valueOf(campos[2]);
+				// }
+				// people.add(new Person(campos[0], campos[1], orden,
+				// TypePerson.CAST));
+				// }
+				people.add(new Person(personString, null, null, TypePerson.CAST));
 			}
 
 			// Directores
 			for (String personString : hitDoc.getValues(ConstantesLucene.directors)) {
-				String[] campos = personString.split(Pattern.quote(ConstantesLucene.tokenize));
-				if (campos != null && campos.length > 0) {
-					people.add(new Person(campos[0], null, null, TypePerson.DIRECTOR));
-				}
+				// String[] campos =
+				// personString.split(Pattern.quote(ConstantesLucene.tokenize));
+				// if (campos != null && campos.length > 0) {
+				// people.add(new Person(campos[0], null, null,
+				// TypePerson.DIRECTOR));
+				// }
+				people.add(new Person(personString, null, null, TypePerson.DIRECTOR));
 			}
 
 			// Escritores

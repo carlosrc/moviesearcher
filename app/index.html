@@ -122,9 +122,9 @@
 				        <md-card-title-media ng-show="movie.urlPoster">
 				            <div class="md-media-md card-media"><img src="https://image.tmdb.org/t/p/w185/{{movie.urlPoster}}" /></div>
 				            
-				            <!--
+				            
 				            <md-button class="md-raised md-accent" ng-click="showSimilarMovies($event, movie.id)" >Similares</md-button>
-							-->
+							
 				          </md-card-title-media>
 				          <md-card-title-text>
 				            <span class="md-headline">{{movie.title}}
@@ -191,8 +191,8 @@
 </section>
 
 
-<script type="text/ng-template" id="temp1.html">
-	<md-dialog aria-label="Películas similares" ng-cloak>
+<script type="text/ng-template" id="dialog_similarMovies.html">
+	<md-dialog aria-label="Películas similares" ng-cloak md-theme="primary-theme">
 	  <form>
 	    <md-toolbar>
 	      <div class="md-toolbar-tools">
@@ -205,15 +205,11 @@
 	    </md-toolbar>
 	    <md-dialog-content ng-controller="MainController as main">
 
-		    <!-- FIXME: Cambiar loading por loadingSimilar y movies por similarMovies -->
-
-{{similarMovies}}
-
 			<div layout="row" layout-sm="column" layout-align="space-around" ng-show="loadingSimilar.valor">
 			    <md-progress-circular md-mode="indeterminate" md-diameter="72"></md-progress-circular>
 			</div> 
 
-			<div ng-repeat="movie in movies" class="fade ng-binding ng-scope">
+			<div ng-repeat="movie in locals.similarMovies" class="fade ng-binding ng-scope">
 				<md-card>
 			        <md-card-title>
 			        <md-card-title-media ng-show="movie.urlPoster">
@@ -268,15 +264,11 @@
 		      </div>
 
 
-
 	    </md-dialog-content>
 	    <md-dialog-actions layout="row">
 	      <span flex></span>
-	      <md-button ng-click="answer('not useful')">
-	       Not Useful
-	      </md-button>
-	      <md-button ng-click="answer('useful')" style="margin-right:20px;">
-	        Useful
+	      <md-button class="md-primary" style="margin-right:20px;">
+	        Cerrar
 	      </md-button>
 	    </md-dialog-actions>
 	  </form>

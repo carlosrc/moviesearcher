@@ -35,7 +35,6 @@ public class SearchRestController {
 	public List<Movie> search(@RequestParam(value = "q", required = false) String query,
 			@RequestParam(value = "tit", required = false) String title,
 			@RequestParam(value = "desc", required = false) String description,
-			@RequestParam(value = "year", required = false) Integer year,
 			@RequestParam(value = "yearInit", required = false) Integer yearInit,
 			@RequestParam(value = "yearEnd", required = false) Integer yearEnd,
 			@RequestParam(value = "minVote", required = false) Float minVoteAverage,
@@ -47,8 +46,8 @@ public class SearchRestController {
 
 		List<Movie> movies = new ArrayList<Movie>();
 
-		movies = Searcher.search(query, title, description, year, yearInit, yearEnd, minVoteAverage, runtime, genres,
-				cast, director, strict);
+		movies = Searcher.search(query, title, description, yearInit, yearEnd, minVoteAverage, runtime, genres, cast,
+				director, strict);
 		return movies;
 	}
 

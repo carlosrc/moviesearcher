@@ -58,7 +58,6 @@ app.service('Servicios', ['$resource', '$mdToast', function($resource, $mdToast)
                   similarMovies.push(item);
               }              
           });
-          console.log(similarMovies);
           loadingSimilar.valor = false;
       }, function (error) {
           loadingSimilar.valor = false;

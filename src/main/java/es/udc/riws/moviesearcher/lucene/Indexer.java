@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.List;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.FloatField;
@@ -26,10 +25,7 @@ public class Indexer {
 
 	public static void indexar(List<Movie> movies) {
 
-		// FIXME: Se están distinguiendo palabras con acento.
-
-		// TODO: Configurar Analyzer
-		Analyzer analyzer = new StandardAnalyzer(ConstantesLucene.version);
+		Analyzer analyzer = ConstantesLucene.getAnalyzer();
 
 		File folder = new File(ConstantesLucene.directory);
 		// Borrar directorio antes de generar un nuevo índice
@@ -61,7 +57,6 @@ public class Indexer {
 	// Método para indexar una película
 	private static Document addMovie(Movie movie) {
 		Document doc = new Document();
-		// TODO: Añadir campos
 		if (movie.getId() == null) {
 			return doc;
 		}
@@ -85,16 +80,15 @@ public class Indexer {
 		}
 
 		if (movie.getYear() != null) {
-			// doc.add(new TextField(ConstantesLucene.releaseDate,
-			// movie.getReleaseDate(), Field.Store.NO));
 			doc.add(new IntField(ConstantesLucene.year, movie.getYear(), Field.Store.YES));
 		}
 
 		doc.add(new IntField(ConstantesLucene.runtime, movie.getRuntime(), Field.Store.YES));
 
 		for (Person person : movie.getPeople()) {
-			String personToIndex = person.getName() + ConstantesLucene.tokenize + person.getCharacterName()
-					+ ConstantesLucene.tokenize + person.getOrder();
+			String personToIndex = person.getName();
+			// + ConstantesLucene.tokenize + person.getCharacterName()
+			// + ConstantesLucene.tokenize + person.getOrder();
 
 			switch (person.getType()) {
 			case CAST:

@@ -37,12 +37,14 @@ app.controller('MainController', ['$scope', 'Servicios', '$mdConstant', '$mdDial
     };
 
     $scope.searchAll = function () {
+    	$scope.resetSearch();
     	$scope.movies = [];
     	$scope.loading.valor = true;
     	var result = Servicios.searchAll("*:*", $scope.movies, $scope.loading);
     }
 
     $scope.index = function () {
+    	$scope.resetSearch();
 		$scope.movies = [];
 		$scope.loading.valor = true;
         Servicios.index($scope.movies, $scope.loading);
@@ -51,7 +53,7 @@ app.controller('MainController', ['$scope', 'Servicios', '$mdConstant', '$mdDial
     $scope.findSimilar = function (id) {
     	$scope.similarMovies = [];
     	$scope.loadingSimilar.valor = true;
-		Servicios.findSimilar(id, similarMovies, $scope.loadingSimilar);
+		Servicios.findSimilar(id, $scope.similarMovies, $scope.loadingSimilar);
     };
 
     // Inicializamos la búsqueda mostrando todas las películas
@@ -64,31 +66,34 @@ app.controller('MainController', ['$scope', 'Servicios', '$mdConstant', '$mdDial
 		$scope.findSimilar(id);
 
 	    $mdDialog.show({
-	      controller: DialogController,
-	      templateUrl: 'temp1.html',
-	      parent: angular.element(document.body),
-	      targetEvent: ev,
-	      clickOutsideToClose: true,
-	      fullscreen: $mdMedia('sm') && $scope.customFullscreen
+			controller: DialogController,
+			templateUrl: 'dialog_similarMovies.html',
+			parent: angular.element(document.body),
+			targetEvent: ev,
+			clickOutsideToClose: true,
+			fullscreen: $mdMedia('sm') && $scope.customFullscreen,
+			locals: {
+				similarMovies: $scope.similarMovies
+			}
 	    })
 	    .then(function(answer) {
-	      $scope.status = 'You said the information was "' + answer + '".';
+	    	$scope.status = 'You said the information was "' + answer + '".';
 	    }, function() {
-	      $scope.status = 'You cancelled the dialog.';
+	    	$scope.status = 'You cancelled the dialog.';
 	    });
 	    $scope.$watch(function() {
-	      return $mdMedia('sm');
+	    	return $mdMedia('sm');
 	    }, function(sm) {
-	      $scope.customFullscreen = (sm === true);
+	    	$scope.customFullscreen = (sm === true);
 	    });
 	  };
 
 
 }]);
 
-function DialogController($scope, $mdDialog) {
+ function DialogController($scope, $mdDialog, locals) {
 
-	console.log($scope.movies);
+	$scope.locals = locals;
 
 	$scope.hide = function() {
 		$mdDialog.hide();
@@ -99,7 +104,7 @@ function DialogController($scope, $mdDialog) {
 	$scope.answer = function(answer) {
 		$mdDialog.hide(answer);
 	};
-}
+};
 
 app.config(function($mdThemingProvider) {
 	// Temas

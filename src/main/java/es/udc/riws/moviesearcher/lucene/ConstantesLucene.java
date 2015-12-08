@@ -1,5 +1,6 @@
 package es.udc.riws.moviesearcher.lucene;
 
+import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.util.Version;
 
 public class ConstantesLucene {
@@ -28,6 +29,11 @@ public class ConstantesLucene {
 	public static Version version			= Version.LUCENE_48;
 	
 	public static String tokenize			= "+|+";
+
+	
+	public static Analyzer getAnalyzer() {
+		return new MyAnalyzer(ConstantesLucene.version);
+	}
 
 	
 }
