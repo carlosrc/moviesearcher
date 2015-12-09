@@ -88,11 +88,14 @@ app.controller('MainController', ['$scope', 'Servicios', '$mdConstant', '$mdDial
 	    });
 	  };
 
-$scope.isCollapsed = true;
+	$scope.isCollapsed = true;
+
+
 
 }]);
 
- function DialogController($scope, $mdDialog, locals) {
+
+function DialogController($scope, $mdDialog, locals) {
 
 	$scope.locals = locals;
 

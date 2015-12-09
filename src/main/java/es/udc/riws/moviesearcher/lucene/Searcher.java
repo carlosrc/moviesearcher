@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
@@ -37,6 +36,7 @@ public class Searcher {
 			Boolean strict) {
 		List<Movie> movies = new ArrayList<Movie>();
 
+		// Ocurr indica si la búsqueda es estricta o no
 		Occur ocurr = Occur.SHOULD;
 		if (strict != null && strict) {
 			ocurr = Occur.MUST;
@@ -60,8 +60,7 @@ public class Searcher {
 				// Todos los campos de búsqueda
 				String[] camposBusqueda = new String[] { ConstantesLucene.title, ConstantesLucene.description,
 						ConstantesLucene.year, ConstantesLucene.voteAverage, ConstantesLucene.runtime,
-						ConstantesLucene.cast, ConstantesLucene.directors, ConstantesLucene.writers,
-						ConstantesLucene.genres };
+						ConstantesLucene.cast, ConstantesLucene.directors, ConstantesLucene.genres };
 
 				MultiFieldQueryParser parser = new MultiFieldQueryParser(ConstantesLucene.version, camposBusqueda,
 						analyzer);
@@ -88,6 +87,7 @@ public class Searcher {
 
 			if (qRuntime != null) {
 				// Se aplica una varianza de +-10 minutos
+				// FIXME: no busca por runtime?
 				booleanQuery.add(NumericRangeQuery.newIntRange(ConstantesLucene.runtime, qRuntime - 10, qRuntime + 10,
 						true, true), ocurr);
 			}
@@ -101,13 +101,14 @@ public class Searcher {
 			// FIXME: La búsqueda por nombres de personas no funciona bien
 			if (qCast != null) {
 				for (String qActor : qCast) {
-					booleanQuery.add(new TermQuery(new Term(ConstantesLucene.cast, qActor)), ocurr);
+					booleanQuery.add(new TermQuery(new Term(ConstantesLucene.cast, "\"" + qActor + "\"")), ocurr);
 				}
 			}
 
 			if (qDirectors != null) {
 				for (String qDirector : qDirectors) {
-					booleanQuery.add(new TermQuery(new Term(ConstantesLucene.directors, qDirector)), ocurr);
+					booleanQuery.add(new TermQuery(new Term(ConstantesLucene.directors, "\"" + qDirector + "\"")),
+							ocurr);
 				}
 			}
 
@@ -152,14 +153,6 @@ public class Searcher {
 				return movies;
 			}
 			int docId = topdoc.scoreDocs[0].doc;
-			List<Movie> initialMovies = processResults(topdoc.scoreDocs, isearcher);
-			Movie initialMovie = null;
-			if (initialMovies != null && !initialMovies.isEmpty()) {
-				initialMovie = initialMovies.get(0);
-			} else {
-				return movies;
-			}
-			System.out.println("Initial movie: " + initialMovie.getTitle());
 
 			// ¿Generar document con los campos que vamos a buscar?
 
@@ -211,36 +204,12 @@ public class Searcher {
 			// Actores
 			List<Person> people = new ArrayList<Person>();
 			for (String personString : hitDoc.getValues(ConstantesLucene.cast)) {
-				// String[] campos =
-				// personString.split(Pattern.quote(ConstantesLucene.tokenize));
-				// if (campos != null && campos.length == 3) {
-				// Integer orden = null;
-				// if (campos[2] != null && !campos[2].equals("null")) {
-				// orden = Integer.valueOf(campos[2]);
-				// }
-				// people.add(new Person(campos[0], campos[1], orden,
-				// TypePerson.CAST));
-				// }
 				people.add(new Person(personString, null, null, TypePerson.CAST));
 			}
 
 			// Directores
 			for (String personString : hitDoc.getValues(ConstantesLucene.directors)) {
-				// String[] campos =
-				// personString.split(Pattern.quote(ConstantesLucene.tokenize));
-				// if (campos != null && campos.length > 0) {
-				// people.add(new Person(campos[0], null, null,
-				// TypePerson.DIRECTOR));
-				// }
 				people.add(new Person(personString, null, null, TypePerson.DIRECTOR));
-			}
-
-			// Escritores
-			for (String personString : hitDoc.getValues(ConstantesLucene.writers)) {
-				String[] campos = personString.split(Pattern.quote(ConstantesLucene.tokenize));
-				if (campos != null && campos.length > 0) {
-					people.add(new Person(campos[0], null, null, TypePerson.WRITER));
-				}
 			}
 
 			// Año

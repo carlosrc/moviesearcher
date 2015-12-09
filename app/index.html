@@ -18,7 +18,7 @@
 	<script src="js/services.js"></script> 
 
 	<!-- Librerías modificadas -->
-	<script src="js/lib/ui-bootstrap-custom-tpls-0.14.3.min.js"></script>
+	<script src="js/lib/ui-bootstrap-custom-tpls-0.14.3.js"></script>
 	<script src="js/lib/dd-text-collapse.js"></script>
 
 	<title>Buscador de películas</title>
@@ -118,6 +118,8 @@
 		<md-content class="md-padding" layout="row" layout-wrap layout-align="center start">
 			<div id="movies" ng-show="movies.length">
 				<h1 class="md-headline">{{movies.length}} películas encontradas</h1>
+
+				<!-- <uib-pagination total-items="totalItems" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination> -->
 
 				<div ng-repeat="movie in movies" class="fade ng-binding ng-scope">
 					<md-card>

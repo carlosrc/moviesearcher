@@ -19,7 +19,6 @@ public class ConstantesLucene {
 	
 	public static String cast				= "cast";
 	public static String directors			= "directors";
-	public static String writers			= "writers";
 	
 	public static String score				= "score";
 	
