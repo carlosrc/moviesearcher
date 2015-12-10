@@ -101,6 +101,10 @@ public class Indexer {
 			}
 		}
 
+		for (String genre : movie.getGenres()) {
+			doc.add(new TextField(ConstantesLucene.genres, genre, Field.Store.YES));
+		}
+
 		return doc;
 	}
 

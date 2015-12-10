@@ -87,7 +87,7 @@ public class Searcher {
 
 			if (qRuntime != null) {
 				// Se aplica una varianza de +-10 minutos
-				// FIXME: no busca por runtime?
+				// FIXME: no busca por runtime
 				booleanQuery.add(NumericRangeQuery.newIntRange(ConstantesLucene.runtime, qRuntime - 10, qRuntime + 10,
 						true, true), ocurr);
 			}
@@ -98,7 +98,6 @@ public class Searcher {
 				}
 			}
 
-			// FIXME: La búsqueda por nombres de personas no funciona bien
 			if (qCast != null) {
 				for (String qActor : qCast) {
 					booleanQuery.add(new TermQuery(new Term(ConstantesLucene.cast, "\"" + qActor + "\"")), ocurr);
@@ -212,6 +211,9 @@ public class Searcher {
 				people.add(new Person(personString, null, null, TypePerson.DIRECTOR));
 			}
 
+			// Géneros
+			List<String> genres = Arrays.asList(hitDoc.getValues(ConstantesLucene.genres));
+
 			// Año
 			int year = Integer.valueOf(hitDoc.get(ConstantesLucene.year));
 
@@ -223,8 +225,7 @@ public class Searcher {
 
 			// Creamos el objeto película
 			Movie movie = new Movie(id, hitDoc.get(ConstantesLucene.title), hitDoc.get(ConstantesLucene.description),
-					hitDoc.get(ConstantesLucene.poster), voteAverage, year, runtime, people,
-					Arrays.asList(hitDoc.getValues(ConstantesLucene.genres)), score.score);
+					hitDoc.get(ConstantesLucene.poster), voteAverage, year, runtime, people, genres, score.score);
 
 			movies.add(movie);
 		}
