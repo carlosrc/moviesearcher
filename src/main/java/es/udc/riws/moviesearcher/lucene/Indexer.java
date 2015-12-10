@@ -83,13 +83,12 @@ public class Indexer {
 			doc.add(new IntField(ConstantesLucene.year, movie.getYear(), Field.Store.YES));
 		}
 
-		doc.add(new IntField(ConstantesLucene.runtime, movie.getRuntime(), Field.Store.YES));
+		if (movie.getRuntime() != null) {
+			doc.add(new IntField(ConstantesLucene.runtime, movie.getRuntime(), Field.Store.YES));
+		}
 
 		for (Person person : movie.getPeople()) {
 			String personToIndex = person.getName();
-			// + ConstantesLucene.tokenize + person.getCharacterName()
-			// + ConstantesLucene.tokenize + person.getOrder();
-
 			switch (person.getType()) {
 			case CAST:
 				doc.add(new TextField(ConstantesLucene.cast, personToIndex, Field.Store.YES));
@@ -97,16 +96,9 @@ public class Indexer {
 			case DIRECTOR:
 				doc.add(new TextField(ConstantesLucene.directors, personToIndex, Field.Store.YES));
 				break;
-			case WRITER:
-				doc.add(new TextField(ConstantesLucene.writers, personToIndex, Field.Store.YES));
-				break;
 			default:
 				break;
 			}
-		}
-
-		for (String genre : movie.getGenres()) {
-			doc.add(new TextField(ConstantesLucene.genres, genre, Field.Store.YES));
 		}
 
 		return doc;

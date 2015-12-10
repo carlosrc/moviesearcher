@@ -31,7 +31,7 @@ public class TmdbApiServiceImpl {
 
 	private static final int NUM_PAGINAS = 1;
 
-	private static final int TIME_TO_SLEEP = 9000;
+	private static final int TIME_TO_SLEEP = 5000;
 
 	private final AtomicLong counter = new AtomicLong();
 
