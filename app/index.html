@@ -141,16 +141,21 @@
 				            <span dd-text-collapse dd-text-collapse-max-length="250" dd-text-collapse-text="{{movie.description}}" class="md-body-1"></span>
 
 				            <span class="md-subhead">Géneros</span>
-							<md-chips
-						        ng-model="movie.genres"
-						        readonly="true"></md-chips>
-
+							<div class="md-chips">
+							    <div ng-repeat="genre in movie.genres" >
+								    <span class="md-chip md-readonly" md-ink-ripple>
+									    <span class="md-chip-content" type="button" ng-click="searchByGenre(genre)">
+									    	{{genre}}
+									    </span>
+							    	</span>
+							    </div>
+						    </div>
 
 						    <span class="md-subhead">Director</span>
 						    <div class="md-chips">
 							    <div ng-repeat="director in movie.people | filter:{ type: 'DIRECTOR' }" >
-								    <span class="md-chip md-readonly">
-									    <span class="md-chip-content">
+								    <span class="md-chip md-readonly" md-ink-ripple>
+									    <span class="md-chip-content" ng-click="searchByDirector(director.name)">
 									    	{{director.name}}
 									    </span>
 							    	</span>
@@ -162,8 +167,8 @@
 						  	<div uib-collapse="isCollapsed">
 							  	<div class="md-chips" >
 								    <div ng-repeat="actor in movie.people | filter:{ type: 'CAST' } | limitTo: 15"  >
-									    <span class="md-chip md-readonly">
-										    <span class="md-chip-content">
+									    <span class="md-chip md-readonly" md-ink-ripple>
+										    <span class="md-chip-content"  ng-click="searchByCast(actor.name)">
 										    	{{actor.name}}
 										    </span>
 								    	</span>
@@ -171,9 +176,6 @@
 							    </div>
 						    </div>
 						    <md-button class="collapse-text-toggle md-accent" ng-click="isCollapsed = !isCollapsed">{{isCollapsed ? "mostrar" : "ocultar"}}</md-button>
-
-						    <!-- Escritores -->
-
 
 				          </md-card-title-text>
 				          
@@ -213,7 +215,7 @@
 	    </md-toolbar>
 	    <md-dialog-content ng-controller="MainController as main">
 
-			<div layout="row" layout-sm="column" layout-align="space-around" ng-show="loadingSimilar.valor">
+			<div layout="row" layout-sm="column" layout-align="space-around" ng-show="locals.loadingSimilar.valor">
 			    <md-progress-circular md-mode="indeterminate" md-diameter="72"></md-progress-circular>
 			</div> 
 
@@ -232,36 +234,42 @@
 
 			            <span dd-text-collapse dd-text-collapse-max-length="250" dd-text-collapse-text="{{movie.description}}" class="md-body-1"></span>
 
-			            <span class="md-subhead">Géneros</span>
-						<md-chips
-					        ng-model="movie.genres"
-					        readonly="true"></md-chips>
-
+						<span class="md-subhead">Géneros</span>
+						<div class="md-chips">
+						    <div ng-repeat="genre in movie.genres" >
+							    <span class="md-chip md-readonly" md-ink-ripple>
+								    <span class="md-chip-content" type="button" ng-click="cancel();searchByGenre(genre)">
+								    	{{genre}}
+								    </span>
+						    	</span>
+						    </div>
+					    </div>
 
 					    <span class="md-subhead">Director</span>
 					    <div class="md-chips">
 						    <div ng-repeat="director in movie.people | filter:{ type: 'DIRECTOR' }" >
-							    <span class="md-chip md-readonly">
-								    <span class="md-chip-content">
+							    <span class="md-chip md-readonly" md-ink-ripple>
+								    <span class="md-chip-content" ng-click="searchByDirector(director.name)">
 								    	{{director.name}}
 								    </span>
 						    	</span>
 						    </div>
 					    </div>
 
-					    <!-- Colapsar reparto -->
-					  	<span class="md-subhead">Reparto</span>
-					  	<div class="md-chips">
-						    <div ng-repeat="actor in movie.people | filter:{ type: 'CAST' } | limitTo: 4"  >
-							    <span class="md-chip md-readonly">
-								    <span class="md-chip-content">
-								    	{{actor.name}}
-								    </span>
-						    	</span>
+					    <!-- Colapsar reparto -->			    
+					  	<span class="md-subhead">Reparto</span>						  	
+					  	<div uib-collapse="isCollapsed">
+						  	<div class="md-chips" >
+							    <div ng-repeat="actor in movie.people | filter:{ type: 'CAST' } | limitTo: 15"  >
+								    <span class="md-chip md-readonly" md-ink-ripple>
+									    <span class="md-chip-content"  ng-click="searchByCast(actor.name)">
+									    	{{actor.name}}
+									    </span>
+							    	</span>
+							    </div>
 						    </div>
 					    </div>
-
-					    <!-- Escritores -->
+					    <md-button class="collapse-text-toggle md-accent" ng-click="isCollapsed = !isCollapsed">{{isCollapsed ? "mostrar" : "ocultar"}}</md-button>
 
 
 			          </md-card-title-text>

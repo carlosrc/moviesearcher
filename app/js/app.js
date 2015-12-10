@@ -28,6 +28,12 @@ app.controller('MainController', ['$scope', 'Servicios', '$mdConstant', '$mdDial
 	$scope.loading = {valor: false};
 	$scope.loadingSimilar = {valor: false};
 
+	$scope.clean = function () {
+		$scope.resetSearch();
+    	$scope.movies = [];
+    	$scope.loading.valor = true;
+	}
+
 	$scope.search = function () {
 		$scope.movies = [];
 		$scope.loading.valor = true;
@@ -37,17 +43,34 @@ app.controller('MainController', ['$scope', 'Servicios', '$mdConstant', '$mdDial
     };
 
     $scope.searchAll = function () {
-    	$scope.resetSearch();
-    	$scope.movies = [];
-    	$scope.loading.valor = true;
-    	var result = Servicios.searchAll("*:*", $scope.movies, $scope.loading);
+    	$scope.clean();
+    	Servicios.searchAll("*:*", $scope.movies, $scope.loading);
     }
 
     $scope.index = function () {
-    	$scope.resetSearch();
-		$scope.movies = [];
-		$scope.loading.valor = true;
+    	$scope.clean();
         Servicios.index($scope.movies, $scope.loading);
+    };
+
+    $scope.searchByGenre = function (genre) {
+    	$scope.clean();
+    	$scope.genres.push(genre);
+		Servicios.search(null, null, null, null, null, null, null, $scope.genres, null, null,
+         false, $scope.movies, $scope.loading);
+    };
+
+    $scope.searchByDirector = function (director) {
+    	$scope.clean();
+    	$scope.director.push(director);
+		Servicios.search(null, null, null, null, null, null, null, null, null, $scope.director,
+         false, $scope.movies, $scope.loading);
+    };
+
+    $scope.searchByCast = function (actor) {
+    	$scope.clean();
+    	$scope.cast.push(actor);
+		Servicios.search(null, null, null, null, null, null, null, null, $scope.cast, null,
+         false, $scope.movies, $scope.loading);
     };
 
     $scope.findSimilar = function (id) {
@@ -55,6 +78,7 @@ app.controller('MainController', ['$scope', 'Servicios', '$mdConstant', '$mdDial
     	$scope.loadingSimilar.valor = true;
 		Servicios.findSimilar(id, $scope.similarMovies, $scope.loadingSimilar);
     };
+
 
     // Inicializamos la búsqueda mostrando todas las películas
     $scope.searchAll();
@@ -73,7 +97,8 @@ app.controller('MainController', ['$scope', 'Servicios', '$mdConstant', '$mdDial
 			clickOutsideToClose: true,
 			fullscreen: $mdMedia('sm') && $scope.customFullscreen,
 			locals: {
-				similarMovies: $scope.similarMovies
+				similarMovies: $scope.similarMovies,
+				loadingSimilar: $scope.loadingSimilar
 			}
 	    })
 	    .then(function(answer) {

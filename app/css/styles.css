@@ -49,8 +49,13 @@ md-card {
 	float: left;
 }
 
-.md-chip {
+.md-chips .md-chip {
 	background: rgb(224,224,224);
+	cursor: pointer;
+}
+
+.md-chips .md-chip:active {
+	background: none;
 }
 
 #movies {

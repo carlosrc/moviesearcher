@@ -163,6 +163,7 @@ public class Searcher {
 			MoreLikeThis mlt = new MoreLikeThis(ireader);
 			mlt.setMinTermFreq(0);
 			mlt.setMinDocFreq(0);
+			mlt.setBoost(true);
 			mlt.setFieldNames(
 					new String[] { ConstantesLucene.genres, ConstantesLucene.cast, ConstantesLucene.directors });
 			mlt.setAnalyzer(analyzer);
