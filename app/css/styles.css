@@ -10,7 +10,8 @@
 
 /* Formato cabecera */
 .toolbar .titulo {
-  font-family: 'Action';
+  font-family: 'Action', 'Courier';
+  font-size:32px;
 }
 
 /* Botón flotante */
