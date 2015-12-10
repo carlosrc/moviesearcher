@@ -13,6 +13,11 @@
   font-family: 'Action';
 }
 
+.toolbar .logo {
+   height: 80px;
+   margin: 10px;
+}
+
 /* Botón flotante */
 .float-right {
     float: right;
