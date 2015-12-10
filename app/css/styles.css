@@ -5,12 +5,12 @@
 
 @font-face {
   font-family: 'Action';
-  src: url('../fonts/Action_man.ttf')  format('truetype'); 
+  src: url('../fonts/Action_Man.ttf')  format('truetype'); 
 }
 
 /* Formato cabecera */
 .toolbar .titulo {
-  font-family: 'Action', Roboto, 'Helvetica Neue';
+  font-family: 'Action';
 }
 
 /* Botón flotante */
