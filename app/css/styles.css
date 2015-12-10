@@ -3,6 +3,16 @@
 	background-color: #f6f6f6;
 }
 
+@font-face {
+  font-family: 'Action';
+  src: url('../fonts/Action_man.ttf')  format('truetype'); 
+}
+
+/* Formato cabecera */
+.toolbar .titulo {
+  font-family: 'Action', Roboto, 'Helvetica Neue';
+}
+
 /* Botón flotante */
 .float-right {
     float: right;
