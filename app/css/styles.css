@@ -48,9 +48,13 @@
 }
 
 /* Películas */
+md-card md-card-title md-card-title-media {
+  margin: 0;
+}
+
 md-card md-card-title md-card-title-media .md-media-md {
-    height: 150px;
-    width: 112px;
+    height: 160px;
+    width: 120px;
     margin-right: 10px;
 }
 
@@ -65,17 +69,20 @@ md-card {
 	float: left;
 }
 
-.md-chips .md-chip {
-	background: rgb(224,224,224);
-	cursor: pointer;
-}
-
-.md-chips .md-chip:active {
-	background: none;
-}
-
 #movies {
 	width: 100%;
+}
+
+#movies .md-chips .md-chip {
+  cursor: pointer;
+}
+
+.md-chips .md-chip {
+  background: rgb(224,224,224);
+}
+
+#movies .md-chips .md-chip:active {
+  background: none;
 }
 
 /* Animaciones */

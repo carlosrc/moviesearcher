@@ -92,7 +92,7 @@
  					
 					<div layout layout-sm="column">
 						<div flex="10" layout layout-align="center center">
-					        <span class="md-body-1 label">Votación mínima</span>
+					        <span class="md-body-1 label">Nota mínima</span>
 					    </div>
 						<md-slider flex md-discrete ng-model="minVote" step="0.5" min="0" max="10" aria-label="voto mínimo"></md-slider>
 						
@@ -240,9 +240,9 @@
 
 						<span class="md-subhead">Géneros</span>
 						<div class="md-chips">
-						    <div ng-repeat="genre in movie.genres" >
-							    <span class="md-chip md-readonly" md-ink-ripple>
-								    <span class="md-chip-content" type="button" ng-click="cancel();searchByGenre(genre)">
+						    <div ng-repeat="genre in movie.genres">
+							    <span class="md-chip md-readonly">
+								    <span class="md-chip-content" type="button">
 								    	{{genre}}
 								    </span>
 						    	</span>
@@ -252,8 +252,8 @@
 					    <span class="md-subhead">Director</span>
 					    <div class="md-chips">
 						    <div ng-repeat="director in movie.people | filter:{ type: 'DIRECTOR' }" >
-							    <span class="md-chip md-readonly" md-ink-ripple>
-								    <span class="md-chip-content" ng-click="searchByDirector(director.name)">
+							    <span class="md-chip md-readonly>
+								    <span class="md-chip-content">
 								    	{{director.name}}
 								    </span>
 						    	</span>
@@ -265,8 +265,8 @@
 					  	<div uib-collapse="isCollapsed">
 						  	<div class="md-chips" >
 							    <div ng-repeat="actor in movie.people | filter:{ type: 'CAST' } | limitTo: 15"  >
-								    <span class="md-chip md-readonly" md-ink-ripple>
-									    <span class="md-chip-content"  ng-click="searchByCast(actor.name)">
+								    <span class="md-chip md-readonly">
+									    <span class="md-chip-content">
 									    	{{actor.name}}
 									    </span>
 							    	</span>
