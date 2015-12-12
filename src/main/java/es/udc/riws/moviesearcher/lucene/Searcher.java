@@ -13,7 +13,6 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.queries.mlt.MoreLikeThis;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
-import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
@@ -117,9 +116,13 @@ public class Searcher {
 						ocurr);
 			}
 
-			Query query = new QueryParser(ConstantesLucene.version, ConstantesLucene.title, analyzer)
-					.parse(booleanQuery.toString());
-			TopDocs topdocs = isearcher.search(query, null, 1000);
+			// FIXME: No funcionan los integers cuando se usa el Analyzer.
+			// Query query = new QueryParser(ConstantesLucene.version,
+			// ConstantesLucene.title, analyzer)
+			// .parse(booleanQuery.toString());
+			// TopDocs topdocs = isearcher.search(query, null, 1000);
+
+			TopDocs topdocs = isearcher.search(booleanQuery, null, 1000);
 
 			// Procesamos los resultados
 			movies = processResults(topdocs.scoreDocs, isearcher);
