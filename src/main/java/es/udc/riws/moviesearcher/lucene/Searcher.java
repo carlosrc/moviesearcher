@@ -9,17 +9,16 @@ import java.util.List;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.Term;
 import org.apache.lucene.queries.mlt.MoreLikeThis;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.NumericRangeQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
@@ -41,7 +40,6 @@ public class Searcher {
 			ocurr = Occur.MUST;
 		}
 
-		// TODO: Configurar Analyzer
 		Analyzer analyzer = ConstantesLucene.getAnalyzer();
 		File folder = new File(ConstantesLucene.directory);
 		Directory directory;
@@ -53,7 +51,7 @@ public class Searcher {
 			// Campos de búsqueda
 
 			BooleanQuery booleanQuery = new BooleanQuery();
-
+			QueryParser parser = null;
 			// Búsqueda general
 			if (q != null && !q.equals("")) {
 				// Todos los campos de búsqueda
@@ -61,15 +59,22 @@ public class Searcher {
 						ConstantesLucene.year, ConstantesLucene.voteAverage, ConstantesLucene.runtime,
 						ConstantesLucene.cast, ConstantesLucene.directors, ConstantesLucene.genres };
 
-				MultiFieldQueryParser parser = new MultiFieldQueryParser(ConstantesLucene.version, camposBusqueda,
-						analyzer);
+				parser = new MultiFieldQueryParser(ConstantesLucene.version, camposBusqueda, analyzer);
 				booleanQuery.add(parser.parse(q), ocurr);
 			}
 			if (qTitle != null && !qTitle.equals("")) {
-				booleanQuery.add(new TermQuery(new Term(ConstantesLucene.title, qTitle)), ocurr);
+				if (strict) {
+					qTitle = "\"" + qTitle + "\"";
+				}
+				parser = new QueryParser(ConstantesLucene.version, ConstantesLucene.title, analyzer);
+				booleanQuery.add(parser.parse(qTitle), ocurr);
 			}
 			if (qDescription != null && !qDescription.equals("")) {
-				booleanQuery.add(new TermQuery(new Term(ConstantesLucene.description, qDescription)), ocurr);
+				if (strict) {
+					qDescription = "\"" + qDescription + "\"";
+				}
+				parser = new QueryParser(ConstantesLucene.version, ConstantesLucene.description, analyzer);
+				booleanQuery.add(parser.parse(qDescription), ocurr);
 			}
 
 			qYearInit = qYearInit != null && qYearInit == 0 ? null : qYearInit;
@@ -86,27 +91,28 @@ public class Searcher {
 
 			if (qRuntime != null) {
 				// Se aplica una varianza de +-10 minutos
-				// FIXME: no busca por runtime
 				booleanQuery.add(NumericRangeQuery.newIntRange(ConstantesLucene.runtime, qRuntime - 10, qRuntime + 10,
 						true, true), ocurr);
 			}
 
 			if (qGenres != null) {
 				for (String qGenre : qGenres) {
-					booleanQuery.add(new TermQuery(new Term(ConstantesLucene.genres, qGenre)), ocurr);
+					parser = new QueryParser(ConstantesLucene.version, ConstantesLucene.genres, analyzer);
+					booleanQuery.add(parser.parse(qGenre), ocurr);
 				}
 			}
 
 			if (qCast != null) {
 				for (String qActor : qCast) {
-					booleanQuery.add(new TermQuery(new Term(ConstantesLucene.cast, "\"" + qActor + "\"")), ocurr);
+					parser = new QueryParser(ConstantesLucene.version, ConstantesLucene.cast, analyzer);
+					booleanQuery.add(parser.parse("\"" + qActor + "\""), ocurr);
 				}
 			}
 
 			if (qDirectors != null) {
 				for (String qDirector : qDirectors) {
-					booleanQuery.add(new TermQuery(new Term(ConstantesLucene.directors, "\"" + qDirector + "\"")),
-							ocurr);
+					parser = new QueryParser(ConstantesLucene.version, ConstantesLucene.directors, analyzer);
+					booleanQuery.add(parser.parse("\"" + qDirector + "\""), ocurr);
 				}
 			}
 
@@ -115,12 +121,6 @@ public class Searcher {
 				booleanQuery.add(NumericRangeQuery.newFloatRange(ConstantesLucene.voteAverage, 0.1F, null, true, true),
 						ocurr);
 			}
-
-			// FIXME: No funcionan los integers cuando se usa el Analyzer.
-			// Query query = new QueryParser(ConstantesLucene.version,
-			// ConstantesLucene.title, analyzer)
-			// .parse(booleanQuery.toString());
-			// TopDocs topdocs = isearcher.search(query, null, 1000);
 
 			TopDocs topdocs = isearcher.search(booleanQuery, null, 1000);
 

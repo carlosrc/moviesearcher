@@ -20,7 +20,7 @@ app.controller('MainController', ['$scope', 'Servicios', '$mdConstant', '$mdDial
 		$scope.genres = [];
 		$scope.cast = [];
 		$scope.director = [];
-		$scope.strict = false;
+		$scope.strict = true;
 	};
 	$scope.movies = [];
 	$scope.similarMovies = [];

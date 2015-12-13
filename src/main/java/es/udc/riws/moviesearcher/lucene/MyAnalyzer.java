@@ -1,6 +1,5 @@
 package es.udc.riws.moviesearcher.lucene;
 
-import java.io.IOException;
 import java.io.Reader;
 
 import org.apache.lucene.analysis.Analyzer;
@@ -47,13 +46,7 @@ public class MyAnalyzer extends Analyzer {
 		// No distinguimos acentos
 		tok = new ASCIIFoldingFilter(tok);
 
-		return new TokenStreamComponents(src, tok) {
-			@Override
-			protected void setReader(final Reader reader) throws IOException {
-				src.setMaxTokenLength(MyAnalyzer.this.maxTokenLength);
-				super.setReader(reader);
-			}
-		};
+		return new TokenStreamComponents(src, tok);
 	}
 
 }
