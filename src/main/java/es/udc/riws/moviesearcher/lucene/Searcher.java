@@ -167,8 +167,7 @@ public class Searcher {
 			mlt.setMinTermFreq(0);
 			mlt.setMinDocFreq(0);
 			mlt.setBoost(true);
-			mlt.setFieldNames(
-					new String[] { ConstantesLucene.genres, ConstantesLucene.cast, ConstantesLucene.directors });
+			mlt.setFieldNames(new String[] { ConstantesLucene.genres, ConstantesLucene.directors });
 			mlt.setAnalyzer(analyzer);
 
 			Query queryLike = mlt.like(docId);

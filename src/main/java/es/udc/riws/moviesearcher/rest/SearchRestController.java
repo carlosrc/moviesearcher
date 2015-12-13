@@ -1,6 +1,5 @@
 package es.udc.riws.moviesearcher.rest;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +20,8 @@ public class SearchRestController {
 
 	@RequestMapping("/index")
 	public List<Movie> index() {
-		List<Movie> movies = new ArrayList<Movie>();
 		// Obtenemos las películas
-		movies = apiService.getMovies();
+		List<Movie> movies = apiService.getMovies();
 
 		// Y las indexamos
 		Indexer.indexar(movies);
@@ -44,19 +42,15 @@ public class SearchRestController {
 			@RequestParam(value = "director", required = false) String[] director,
 			@RequestParam(value = "strict", required = false) Boolean strict) {
 
-		List<Movie> movies = new ArrayList<Movie>();
-
-		movies = Searcher.search(query, title, description, yearInit, yearEnd, minVoteAverage, runtime, genres, cast,
-				director, strict);
+		List<Movie> movies = Searcher.search(query, title, description, yearInit, yearEnd, minVoteAverage, runtime,
+				genres, cast, director, strict);
 		return movies;
 	}
 
 	@RequestMapping("/findSimilar")
 	public List<Movie> findSimilar(@RequestParam(value = "id", required = true) long id) {
 
-		List<Movie> movies = new ArrayList<Movie>();
-
-		movies = Searcher.findSimilar(id);
+		List<Movie> movies = Searcher.findSimilar(id);
 		return movies;
 	}
 

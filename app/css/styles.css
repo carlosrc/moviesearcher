@@ -31,10 +31,10 @@
 .collapse-text-toggle.md-accent {
  	padding: 0;
 	margin: 0;
-    font-size: 12px;
-    line-height: 24px;
-    min-height: 24px;
-    min-width: 60px;
+  font-size: 12px;
+  line-height: 24px;
+  min-height: 24px;
+  min-width: 60px;
 }
 
 /* Formulario de Búsqueda */
@@ -79,6 +79,12 @@ md-card {
 
 .md-chips .md-chip {
   background: rgb(224,224,224);
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 #movies .md-chips .md-chip:active {

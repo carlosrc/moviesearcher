@@ -6,7 +6,6 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.core.LowerCaseFilter;
 import org.apache.lucene.analysis.core.StopAnalyzer;
-import org.apache.lucene.analysis.core.StopFilter;
 import org.apache.lucene.analysis.miscellaneous.ASCIIFoldingFilter;
 import org.apache.lucene.analysis.standard.StandardFilter;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
@@ -42,7 +41,7 @@ public class MyAnalyzer extends Analyzer {
 		// No distinguimos mayúsculas
 		tok = new LowerCaseFilter(version, tok);
 		// No procesamos las stopwords
-		tok = new StopFilter(version, tok, stopwords);
+		// tok = new StopFilter(version, tok, stopwords);
 		// No distinguimos acentos
 		tok = new ASCIIFoldingFilter(tok);
 

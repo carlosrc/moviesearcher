@@ -11,15 +11,12 @@ import es.udc.riws.moviesearcher.model.Movie;
 @Service
 public class ApiServiceImpl implements ApiService {
 
-//	@Autowired
-//	private ImdbApiServiceImpl imdbApiService;
-	
 	@Autowired
 	private TmdbApiServiceImpl tmdbApiService;
-	
+
 	@Override
 	public List<Movie> getMovies() {
-		
+
 		return tmdbApiService.getMovies();
 	}
 

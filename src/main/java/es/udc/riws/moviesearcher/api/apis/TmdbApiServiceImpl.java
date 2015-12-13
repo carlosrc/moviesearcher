@@ -29,7 +29,7 @@ public class TmdbApiServiceImpl {
 
 	public static final String API_KEY = "956651bac38135dfba7377945f6809a9";
 
-	private static final int NUM_PAGINAS = 2;
+	private static final int NUM_PAGINAS = 1;
 
 	private static final int TIME_TO_SLEEP = 6000;
 
