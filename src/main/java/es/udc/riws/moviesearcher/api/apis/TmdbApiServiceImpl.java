@@ -25,7 +25,7 @@ import info.movito.themoviedbapi.model.people.PersonCrew;
  *
  */
 @Service
-public class TmdbApiServiceImpl {
+public class TmdbApiServiceImpl implements GenericApiService {
 
 	public static final String API_KEY = "956651bac38135dfba7377945f6809a9";
 
@@ -35,6 +35,7 @@ public class TmdbApiServiceImpl {
 
 	private final AtomicLong counter = new AtomicLong();
 
+	@Override
 	public List<Movie> getMovies() {
 
 		TmdbApi tmdbApi = new TmdbApi(API_KEY);
@@ -57,9 +58,6 @@ public class TmdbApiServiceImpl {
 		for (MovieDb result : results) {
 
 			MovieDb movieDb = moviesTmdb.getMovie(result.getId(), "es");
-
-			// FIXME: Primero comprobar que no existe la película.
-			// Redefinir el método equals en Movie
 
 			// Creamos una lista de géneros
 			List<String> genres = new ArrayList<String>();

@@ -176,8 +176,7 @@ public class Searcher {
 			// Procesamos los resultados
 			movies = processResults(topdocs.scoreDocs, isearcher);
 			if (!movies.isEmpty() && movies.get(0).getId().equals(id)) {
-				// TODO: Eliminar la película inicial de búsqueda
-				// movies.remove(0);
+				movies.remove(0);
 			}
 
 		} catch (IOException e) {
