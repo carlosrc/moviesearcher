@@ -23,7 +23,7 @@ import es.udc.riws.moviesearcher.model.Person;
 
 public class Indexer {
 
-	public static void indexar(List<Movie> movies) {
+	public static void index(List<Movie> movies) {
 
 		Analyzer analyzer = ConstantesLucene.getAnalyzer();
 

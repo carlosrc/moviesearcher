@@ -24,7 +24,7 @@ public class SearchRestController {
 		List<Movie> movies = apiService.getMovies();
 
 		// Y las indexamos
-		Indexer.indexar(movies);
+		Indexer.index(movies);
 
 		return movies;
 	}

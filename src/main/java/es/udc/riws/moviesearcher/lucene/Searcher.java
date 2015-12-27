@@ -73,8 +73,12 @@ public class Searcher {
 				if (strict) {
 					qDescription = "\"" + qDescription + "\"";
 				}
-				parser = new QueryParser(ConstantesLucene.version, ConstantesLucene.description, analyzer);
-				booleanQuery.add(parser.parse(qDescription), ocurr);
+				parser = new QueryParser(ConstantesLucene.version, ConstantesLucene.description,
+						ConstantesLucene.getAnalyzerWithStopWords());
+				Query queryDesc = parser.parse(qDescription);
+				if (!queryDesc.toString().isEmpty()) {
+					booleanQuery.add(queryDesc, ocurr);
+				}
 			}
 
 			qYearInit = qYearInit != null && qYearInit == 0 ? null : qYearInit;
