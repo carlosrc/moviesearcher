@@ -56,6 +56,10 @@
 
 /* Películas */
 
+md-content.contenido {
+  padding-top: 0px;
+}
+
 md-card md-card-title md-card-title-media {
   margin: 0;
 }

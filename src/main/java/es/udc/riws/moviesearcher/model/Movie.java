@@ -22,11 +22,6 @@ public class Movie {
 
 	private List<String> genres;
 
-	// Puntuación calculada por Lucene de la similitud de la búsqueda con la
-	// película en cuestión
-	// TODO: Normalizar resultado del 0 al 1 en función del máximo score
-	private Float score;
-
 	public Movie(Long id, String title, String description, String urlPoster, Float voteAverage, Integer year,
 			Integer runtime, List<Person> people, List<String> genres) {
 		super();
@@ -44,7 +39,6 @@ public class Movie {
 	public Movie(Long id, String title, String description, String urlPoster, Float voteAverage, Integer year,
 			Integer runtime, List<Person> people, List<String> genres, Float score) {
 		this(id, title, description, urlPoster, voteAverage, year, runtime, people, genres);
-		this.score = score;
 	}
 
 	public Long getId() {
@@ -117,14 +111,6 @@ public class Movie {
 
 	public void setRuntime(Integer runtime) {
 		this.runtime = runtime;
-	}
-
-	public Float getScore() {
-		return score;
-	}
-
-	public void setScore(Float score) {
-		this.score = score;
 	}
 
 	@Override

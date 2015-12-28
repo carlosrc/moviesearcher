@@ -4,7 +4,7 @@ app.service('Servicios', ['$resource', '$mdToast', function($resource, $mdToast)
 
   this.servidor = 'http://www.localhost:8080';
   // Tomcat Raspberry
-  // this.servidor = 'http://www.192.168.0.192:8082';
+  // this.servidor = 'http://192.168.0.192:8082';
 
   this.index = function (movies, loading) {
       console.log("Index method");
