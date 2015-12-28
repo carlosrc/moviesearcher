@@ -9,22 +9,24 @@
 }
 
 /* Formato cabecera */
+
 .toolbar .titulo {
   font-family: 'Action', 'Courier';
   font-size:32px;
 }
 
 .toolbar .logo {
-   height: 80px;
-   margin: 10px;
+  height: 80px;
+  width: 80px;
+  margin: 10px;
 }
 
 /* Botón flotante */
 .float-right {
-    float: right;
-    position: fixed;
-    bottom: 10px;
-    right: 10px;
+  float: right;
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
 }
 
 /* Botón más (descripción) */
@@ -38,24 +40,30 @@
 }
 
 /* Formulario de Búsqueda */
+
 #bloqueControl {
-    text-align: center;
+  text-align: center;
 }
 
 .label {
-    color: rgba(0,0,0,0.54);
-    font-size: 16px;
+  color: rgba(0,0,0,0.54);
+  font-size: 16px;
+}
+
+.scrollfix {
+  
 }
 
 /* Películas */
+
 md-card md-card-title md-card-title-media {
   margin: 0;
 }
 
 md-card md-card-title md-card-title-media .md-media-md {
-    height: 160px;
-    width: 120px;
-    margin-right: 10px;
+  height: 160px;
+  width: 120px;
+  margin-right: 10px;
 }
 
 md-card md-card-title md-card-title-media .md-media-md img {
@@ -91,6 +99,17 @@ md-card {
   background: none;
 }
 
+/* Diálogo de películas similares */
+
+md-dialog {
+  max-width: 85%;
+  max-height: 85%;
+}
+
+.vacio {
+  padding: 0 50px;
+}
+
 /* Animaciones */
 
 .fade.ng-enter {
@@ -115,5 +134,44 @@ md-card {
   }
   to {
     opacity: 0;
+  }
+}
+
+
+/* CSS Responsive */
+@media (max-width:959px){
+  .toolbar .botones {
+    display: none;
+  }
+
+  md-card {
+    width: 97%;
+    float: left;
+  }
+  md-progress-circular {
+    margin: auto;
+  }
+  .scrollfix {
+    overflow-x: hidden;
+  }
+}
+
+@media (max-width: 980px) {
+  md-dialog md-card {
+    width: 97%;
+  }
+}
+
+@media (max-width: 600px) {
+  md-dialog {
+    max-width: 99%;
+    max-height: 95%;
+  }
+
+  md-dialog md-card-title {
+    display: block;
+  }
+  md-dialog md-card-title md-card-title-media .md-media-md {
+    margin: auto;
   }
 }

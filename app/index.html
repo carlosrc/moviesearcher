@@ -37,8 +37,10 @@
 	    
 	      	<span flex="" class="flex"></span>
 	      	
-			<md-button class="md-raised" ng-click="searchAll()">Mostrar todas</md-button>
-			<md-button class="md-raised" ng-click="index()">Generar índice</md-button>
+	      	<div class="botones">
+				<md-button class="md-raised" ng-click="searchAll()" ng-disabled="loading.valor">Mostrar todas</md-button>
+				<md-button class="md-raised" ng-click="index()" ng-disabled="loading.valor">Generar índice</md-button>
+			</div>
 
 	    </div>
 	</md-toolbar>
@@ -90,7 +92,7 @@
 				        </md-checkbox>
 					</div>
  					
-					<div layout layout-sm="column">
+					<div layout layout-sm="column" class="scrollfix">
 						<div flex="10" layout layout-align="center center">
 					        <span class="md-body-1 label">Nota mínima</span>
 					    </div>
@@ -109,7 +111,7 @@
 					</div>
 				</md-content>
 
-				<md-button class="md-raised md-primary" ng-click="search()" >Buscar</md-button>
+				<md-button class="md-raised md-primary" ng-click="search()" ng-disabled="loading.valor">Buscar</md-button>
 				<md-button class="md-raised" ng-click="resetSearch()">Reset</md-button>
 			</form>
 
@@ -222,6 +224,10 @@
 			<div layout="row" layout-sm="column" layout-align="space-around" ng-show="locals.loadingSimilar.valor">
 			    <md-progress-circular md-mode="indeterminate" md-diameter="72"></md-progress-circular>
 			</div> 
+
+			<div ng-show="!locals.similarMovies.length">
+				<h1 class="md-headline vacio">No se han encontrado películas.</h1>
+			</div>
 
 			<div ng-repeat="movie in locals.similarMovies" class="fade ng-binding ng-scope">
 				<md-card>
