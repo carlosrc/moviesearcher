@@ -13,6 +13,7 @@ import org.apache.lucene.queries.mlt.MoreLikeThis;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
@@ -159,28 +160,31 @@ public class Searcher {
 				return movies;
 			}
 			int docId = topdoc.scoreDocs[0].doc;
-
-			// ¿Generar document con los campos que vamos a buscar?
+			Movie movie = processResults(topdoc.scoreDocs, isearcher).get(0);
 
 			// Similares
-			// TODO: Configurar parámetros de similitud. Que es termfreq y
-			// docfreq? Habrá problemas con los campos numéricos, como año, y
-			// director y casting no sé como está funcionando. Debe de buscar
-			// por palabras sueltas...
 			MoreLikeThis mlt = new MoreLikeThis(ireader);
 			mlt.setMinTermFreq(0);
 			mlt.setMinDocFreq(0);
-			mlt.setBoost(true);
-			mlt.setFieldNames(new String[] { ConstantesLucene.genres, ConstantesLucene.directors });
+			mlt.setBoost(false);
+			mlt.setFieldNames(new String[] { ConstantesLucene.genres, ConstantesLucene.directorsLiteral });
 			mlt.setAnalyzer(analyzer);
 
 			Query queryLike = mlt.like(docId);
-			TopDocs topdocs = isearcher.search(queryLike, 10);
+
+			BooleanQuery booleanQuery = new BooleanQuery();
+			BooleanClause clause = new BooleanClause(queryLike, Occur.SHOULD);
+			booleanQuery.add(clause);
+			booleanQuery.add(NumericRangeQuery.newIntRange(ConstantesLucene.year, movie.getYear() - 2,
+					movie.getYear() + 2, true, true), Occur.SHOULD);
+
+			TopDocs topdocs = isearcher.search(booleanQuery, 10);
 
 			// Procesamos los resultados
 			movies = processResults(topdocs.scoreDocs, isearcher);
-			if (!movies.isEmpty() && movies.get(0).getId().equals(id)) {
-				movies.remove(0);
+			// Eliminamos la propia película de la lista
+			if (!movies.isEmpty() && movies.contains(movie)) {
+				movies.remove(movie);
 			}
 
 		} catch (IOException e) {

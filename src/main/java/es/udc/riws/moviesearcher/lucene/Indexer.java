@@ -7,11 +7,13 @@ import java.util.List;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.FieldType;
 import org.apache.lucene.document.FloatField;
 import org.apache.lucene.document.IntField;
 import org.apache.lucene.document.LongField;
 import org.apache.lucene.document.StoredField;
 import org.apache.lucene.document.TextField;
+import org.apache.lucene.index.FieldInfo;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
@@ -22,6 +24,8 @@ import es.udc.riws.moviesearcher.model.Movie;
 import es.udc.riws.moviesearcher.model.Person;
 
 public class Indexer {
+
+	private static FieldType mltType;
 
 	public static void index(List<Movie> movies) {
 
@@ -43,6 +47,14 @@ public class Indexer {
 
 			IndexWriterConfig config = new IndexWriterConfig(ConstantesLucene.version, analyzer);
 			IndexWriter iwriter = new IndexWriter(directory, config);
+
+			// Tipo propio para la búsqueda con MoreLikeThis
+			mltType = new FieldType();
+			mltType.setIndexed(true);
+			mltType.setStored(false);
+			mltType.setTokenized(false);
+			mltType.setStoreTermVectors(true);
+			mltType.setIndexOptions(FieldInfo.IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS);
 
 			// Cada película, un documento
 			for (Movie movie : movies) {
@@ -95,6 +107,7 @@ public class Indexer {
 				break;
 			case DIRECTOR:
 				doc.add(new TextField(ConstantesLucene.directors, personToIndex, Field.Store.YES));
+				doc.add(new Field(ConstantesLucene.directorsLiteral, personToIndex, mltType));
 				break;
 			default:
 				break;
