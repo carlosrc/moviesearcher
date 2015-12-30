@@ -225,7 +225,7 @@
 			    <md-progress-circular md-mode="indeterminate" md-diameter="72"></md-progress-circular>
 			</div> 
 
-			<div ng-show="!locals.similarMovies.length">
+			<div ng-show="!locals.loadingSimilar.valor && !locals.similarMovies.length">
 				<h1 class="md-headline vacio">No se han encontrado películas.</h1>
 			</div>
 

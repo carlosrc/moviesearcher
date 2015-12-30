@@ -178,7 +178,7 @@ public class Searcher {
 			booleanQuery.add(NumericRangeQuery.newIntRange(ConstantesLucene.year, movie.getYear() - 2,
 					movie.getYear() + 2, true, true), Occur.SHOULD);
 
-			TopDocs topdocs = isearcher.search(booleanQuery, 10);
+			TopDocs topdocs = isearcher.search(booleanQuery, 10 + 1);
 
 			// Procesamos los resultados
 			movies = processResults(topdocs.scoreDocs, isearcher);
@@ -190,8 +190,6 @@ public class Searcher {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		System.out.println("Obtenidas " + movies.size() + " películas similares.");
 
 		return movies;
 	}

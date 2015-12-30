@@ -29,7 +29,7 @@ public class TmdbApiServiceImpl implements GenericApiService {
 
 	public static final String API_KEY = "956651bac38135dfba7377945f6809a9";
 
-	private static final int NUM_PAGINAS = 1;
+	private static final int NUM_PAGINAS = 2;
 
 	private static final int TIME_TO_SLEEP = 6000;
 
@@ -52,7 +52,8 @@ public class TmdbApiServiceImpl implements GenericApiService {
 			} else {
 				results.getResults().addAll(moviesTmdb.getPopularMovieList("es", i).getResults());
 			}
-			results.getResults().addAll(moviesTmdb.getTopRatedMovies("es", i).getResults());
+			// results.getResults().addAll(moviesTmdb.getTopRatedMovies("es",
+			// i).getResults());
 		}
 		int processedMovies = 0;
 		for (MovieDb result : results) {
@@ -99,8 +100,6 @@ public class TmdbApiServiceImpl implements GenericApiService {
 
 			if (!movies.contains(movie)) {
 				movies.add(movie);
-			} else {
-				System.out.println("Ya existe la película: " + movie.getTitle());
 			}
 
 			processedMovies++;
@@ -114,7 +113,6 @@ public class TmdbApiServiceImpl implements GenericApiService {
 
 	private void dormir() {
 		try {
-			System.out.println("Durmiendo " + TIME_TO_SLEEP + "ms");
 			Thread.sleep(TIME_TO_SLEEP);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
