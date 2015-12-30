@@ -11,3 +11,9 @@ Servicio REST:
 
 	Buscar películas similares a otra película:
 		http://localhost:8080/moviesearcher/findSimilar?id=identificador
+		
+Aplicación Web: 
+	
+		Abrir el archivo /app/index.html en un navegador.
+		Pulsar el botón "Generar índice" para indexar el contenido.
+		Cargada la información ya se podrán realizar las búsquedas.
