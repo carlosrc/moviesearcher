@@ -17,3 +17,6 @@ Aplicación Web:
 		Abrir el archivo /app/index.html en un navegador.
 		Pulsar el botón "Generar índice" para indexar el contenido.
 		Cargada la información ya se podrán realizar las búsquedas.
+		
+![Búsqueda](/doc/img/busqueda.png)
+![Similares](/doc/img/similares.png)
